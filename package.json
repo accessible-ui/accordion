@@ -1,16 +1,26 @@
 {
   "name": "@accessible/accordion",
   "version": "1.0.0",
-  "homepage": "https://github.com/accessible-ui/accessible#readme",
-  "repository": "github:accessible-ui/accessible",
-  "bugs": "https://github.com/accessible-ui/accessible/issues",
-  "author": "Jared Lunde <jared@BeStellar.co> (https://jaredLunde.com)",
+  "homepage": "https://github.com/accessible-ui/accordion#readme",
+  "repository": "github:accessible-ui/accordion",
+  "bugs": "https://github.com/accessible-ui/accordion/issues",
+  "author": "Jared Lunde <jared.lunde@gmail.com> (https://jaredLunde.com)",
   "license": "MIT",
-  "description": "",
+  "description": "An accessible and versatile accordion component for React",
   "keywords": [
     "react",
     "react component",
-    "accordion"
+    "accordion",
+    "accessible accordion",
+    "a11y accordion",
+    "react a11y accordion",
+    "react accessible accordion",
+    "react accordion",
+    "react accordion component",
+    "a11y",
+    "react aria accordion",
+    "aria",
+    "aria accordion"
   ],
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
@@ -74,7 +84,15 @@
     "ts-jest": "latest",
     "typescript": "latest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@accessible/use-conditional-focus": "^1.0.1",
+    "@accessible/use-id": "^1.0.2",
+    "@accessible/use-keycode": "^1.0.2",
+    "@react-hook/merged-ref": "^1.0.8",
+    "@react-hook/passive-layout-effect": "^1.0.2",
+    "@react-hook/switch": "^1.0.4",
+    "clsx": "^1.0.4"
+  },
   "peerDependencies": {
     "prop-types": ">=15.6",
     "react": ">=16.8",
