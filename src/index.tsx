@@ -18,15 +18,19 @@ const __DEV__ =
   typeof process !== 'undefined' && process.env.NODE_ENV !== 'production'
 
 export interface AccordionContextValue {
-  panels: (HTMLElement | undefined)[]
-  registerPanel: (index: number, trigger: HTMLElement) => () => void
-  activate: (panel: number | undefined) => void
-  deactivate: (panel: number | undefined) => void
-  isActive: (panel: number | undefined) => boolean
+  sections: (HTMLElement | undefined)[]
+  registerSection: (index: number, trigger: HTMLElement) => () => void
+  active: number[]
+  activate: (section: number | undefined) => void
+  deactivate: (section: number | undefined) => void
+  isActive: (section: number | undefined) => boolean
+  allowAllClosed: boolean
 }
 
 // @ts-ignore
-export const AccordionContext: React.Context<AccordionContextValue> = React.createContext({}),
+export const AccordionContext: React.Context<AccordionContextValue> = React.createContext(
+    {}
+  ),
   {Consumer: AccordionConsumer} = AccordionContext,
   useAccordion = () => useContext<AccordionContextValue>(AccordionContext)
 
@@ -35,6 +39,7 @@ export interface AccordionProps {
   defaultActive?: number | number[]
   allowMultipleOpen?: boolean
   allowAllClosed?: boolean
+  onChange?: (active: number | number[]) => void
   children:
     | React.ReactElement
     | React.ReactElement[]
@@ -47,9 +52,10 @@ export const Accordion: React.FC<AccordionProps> = ({
   defaultActive,
   allowMultipleOpen = false,
   allowAllClosed = false,
+  onChange,
   children,
 }) => {
-  const [panels, setPanels] = useState<(HTMLElement | undefined)[]>([])
+  const [sections, setSections] = useState<(HTMLElement | undefined)[]>([])
   const [userActive, setActive] = useState<number[]>(
     Array.isArray(defaultActive)
       ? defaultActive
@@ -58,7 +64,7 @@ export const Accordion: React.FC<AccordionProps> = ({
       : []
   )
 
-  const currentActive =
+  const nextActive =
     typeof active === 'undefined'
       ? userActive
       : Array.isArray(active)
@@ -66,19 +72,19 @@ export const Accordion: React.FC<AccordionProps> = ({
       : [active]
 
   if (__DEV__) {
-    if (!allowAllClosed && currentActive.length === 0) {
+    if (!allowAllClosed && nextActive.length === 0) {
       throw new Error(
-        `Accordion requires at least one panel to be open, but there were no active panels.`
+        `Accordion requires at least one section to be open, but there were no active sections.`
       )
     }
 
     React.Children.forEach(children, child => {
       if (
         (typeof child !== 'object' && child === null) ||
-        (child as React.ReactElement).type !== Panel
+        (child as React.ReactElement).type !== Section
       ) {
         throw new Error(
-          `Accordion requires that all of its direct children be Panel components.`
+          `Accordion requires that all of its direct children be Section components.`
         )
       }
     })
@@ -86,22 +92,23 @@ export const Accordion: React.FC<AccordionProps> = ({
 
   const context = useMemo(
     () => ({
-      panels,
-      registerPanel: (index: number, trigger: HTMLElement) => {
-        setPanels(current => {
+      sections,
+      registerSection: (index: number, trigger: HTMLElement) => {
+        setSections(current => {
           const next = current.slice(0)
           next[index] = trigger
           return next
         })
 
         return () =>
-          setPanels(current => {
+          setSections(current => {
             if (current[index] === void 0) return current
             const next = current.slice(0)
             next[index] = void 0
             return next
           })
       },
+      active: nextActive,
       activate: (index: number | undefined) =>
         setActive(current => {
           if (index === void 0 || current.indexOf(index) > -1) return current
@@ -117,10 +124,15 @@ export const Accordion: React.FC<AccordionProps> = ({
             .concat(current.slice(current.indexOf(index) + 1))
         }),
       isActive: (index: number | undefined) =>
-        index !== void 0 && currentActive.indexOf(index) > -1,
+        index !== void 0 && nextActive.indexOf(index) > -1,
+      allowAllClosed,
     }),
-    [panels, currentActive, allowMultipleOpen, allowAllClosed]
+    [sections, nextActive, allowMultipleOpen, allowAllClosed]
   )
+
+  useEffect(() => {
+    onChange?.(allowMultipleOpen ? nextActive : nextActive[0])
+  }, [nextActive])
 
   return (
     <AccordionContext.Provider value={context}>
@@ -137,7 +149,7 @@ export const Accordion: React.FC<AccordionProps> = ({
   )
 }
 
-export interface PanelContextValue {
+export interface SectionContextValue {
   isOpen: boolean
   open: () => void
   close: () => void
@@ -147,88 +159,65 @@ export interface PanelContextValue {
   triggerRef: React.MutableRefObject<HTMLElement | null>
 }
 
-export interface PanelControls {
+export interface SectionControls {
   open: () => void
   close: () => void
   toggle: () => void
 }
 
 // @ts-ignore
-export const PanelContext: React.Context<PanelContextValue> = React.createContext({}),
-  {Consumer: PanelConsumer} = PanelContext,
-  usePanel = () => useContext<PanelContextValue>(PanelContext),
-  useIsOpen = () => usePanel().isOpen,
-  useControls = (): PanelControls => {
-    const {open, close, toggle} = usePanel()
+export const SectionContext: React.Context<SectionContextValue> = React.createContext(
+    {}
+  ),
+  {Consumer: SectionConsumer} = SectionContext,
+  useSection = () => useContext<SectionContextValue>(SectionContext),
+  useIsOpen = () => useSection().isOpen,
+  useControls = (): SectionControls => {
+    const {open, close, toggle} = useSection()
     return {open, close, toggle}
   }
 
-export interface TargetProps {
-  closeOnEscape?: boolean
-  openClass?: string
-  closedClass?: string
-  openStyle?: React.CSSProperties
-  closedStyle?: React.CSSProperties
-  children: React.ReactElement
+export interface SectionProps {
+  id?: string
+  index?: number
+  children:
+    | React.ReactNode
+    | React.ReactNode[]
+    | JSX.Element[]
+    | JSX.Element
+    | ((context: SectionContextValue) => React.ReactNode)
 }
 
-export const Target: React.FC<TargetProps> = ({
-  closeOnEscape = true,
-  openClass,
-  closedClass,
-  openStyle,
-  closedStyle,
-  children,
-}) => {
-  const {id, isOpen, close, triggerRef} = usePanel()
-  // handles closing the modal when the ESC key is pressed
-  const focusRef = useConditionalFocus(isOpen, true)
-  const ref = useMergedRef(
-    // @ts-ignore
-    children.ref,
-    focusRef,
-    useKeycode(27, () => {
-      if (closeOnEscape) {
-        close()
-        triggerRef.current?.focus()
-      }
-    })
+export const Section: React.FC<SectionProps> = ({id, index, children}) => {
+  const {isActive, activate, deactivate, registerSection} = useAccordion()
+  const triggerRef = useRef<HTMLElement>(null)
+  const realId = `section--${useId(id)}`
+
+  useEffect(
+    () => registerSection(index as number, triggerRef.current as HTMLElement),
+    []
   )
 
-  return cloneElement(children, {
-    id,
-    className:
-      clsx(children.props.className, isOpen ? openClass : closedClass) ||
-      void 0,
-    style: Object.assign(
-      {visibility: isOpen ? 'visible' : 'hidden'},
-      children.props.style,
-      isOpen ? openStyle : closedStyle
-    ),
-    'aria-hidden': `${!isOpen}`,
-    ref,
-  })
-}
+  const context = useMemo(
+    () => ({
+      id: realId,
+      index: index as number,
+      open: () => activate(index),
+      close: () => deactivate(index),
+      toggle: () => (isActive(index) ? deactivate(index) : activate(index)),
+      isOpen: isActive(index),
+      triggerRef,
+    }),
+    [realId, index, activate, deactivate, isActive]
+  )
 
-export interface CloseProps {
-  children: JSX.Element | React.ReactElement
-}
-
-export const Close: React.FC<CloseProps> = ({children}) => {
-  const {close, isOpen, id} = usePanel()
-
-  return cloneElement(children, {
-    'aria-controls': id,
-    'aria-expanded': String(isOpen),
-    'aria-label': children.props['aria-label'] || 'Close panel',
-    onClick: useCallback(
-      e => {
-        close()
-        children.props.onClick?.(e)
-      },
-      [close, children.props.onClick]
-    ),
-  })
+  return (
+    <SectionContext.Provider
+      value={context}
+      // @ts-ignore
+      children={typeof children === 'function' ? children(context) : children}
+    />
+  )
 }
 
 export interface TriggerProps {
@@ -246,9 +235,9 @@ export const Trigger: React.FC<TriggerProps> = ({
   closedStyle,
   children,
 }) => {
-  const {isOpen, id, index, toggle, triggerRef} = usePanel()
+  const {sections, active, allowAllClosed} = useAccordion()
+  const {isOpen, id, index, toggle, triggerRef} = useSection()
   const clicked = useRef(false)
-  const {panels} = useAccordion()
   const ref = useMergedRef(
     // @ts-ignore
     children.ref,
@@ -266,13 +255,13 @@ export const Trigger: React.FC<TriggerProps> = ({
       clicked.current = false
     }),
     // down arrow
-    useKeycode(40, () => focusNext(panels, index)),
+    useKeycode(40, () => focusNext(sections, index)),
     // up arrow
-    useKeycode(38, () => focusPrev(panels, index)),
+    useKeycode(38, () => focusPrev(sections, index)),
     // home
-    useKeycode(36, () => panels[0]?.focus()),
+    useKeycode(36, () => sections[0]?.focus()),
     // end
-    useKeycode(35, () => panels[panels.length - 1]?.focus())
+    useKeycode(35, () => sections[sections.length - 1]?.focus())
   )
 
   useLayoutEffect(() => {
@@ -281,7 +270,7 @@ export const Trigger: React.FC<TriggerProps> = ({
     // nav issues (enter firing twice, space firing twice)
     const current = triggerRef.current
     if (current) {
-      const handleKeydown = () => clicked.current = false
+      const handleKeydown = () => (clicked.current = false)
       current.addEventListener('keydown', handleKeydown)
       return () => current.removeEventListener('keydown', handleKeydown)
     }
@@ -290,6 +279,7 @@ export const Trigger: React.FC<TriggerProps> = ({
   return cloneElement(children, {
     'aria-controls': id,
     'aria-expanded': String(isOpen),
+    'aria-disabled': String(!allowAllClosed && isOpen && active.length === 1),
     className:
       clsx(children.props.className, isOpen ? openClass : closedClass) ||
       void 0,
@@ -312,69 +302,102 @@ export const Trigger: React.FC<TriggerProps> = ({
 }
 
 export const focusNext = (
-  panels: (HTMLElement | undefined)[],
+  sections: (HTMLElement | undefined)[],
   currentIndex: number
 ) => {
-  if (currentIndex === panels.length - 1) panels[0]?.focus()
-  else panels[currentIndex + 1]?.focus()
+  if (currentIndex === sections.length - 1) sections[0]?.focus()
+  else sections[currentIndex + 1]?.focus()
 }
 
 export const focusPrev = (
-  panels: (HTMLElement | undefined)[],
+  sections: (HTMLElement | undefined)[],
   currentIndex: number
 ) => {
-  if (currentIndex === 0) panels[panels.length - 1]?.focus()
-  else panels[currentIndex - 1]?.focus()
+  if (currentIndex === 0) sections[sections.length - 1]?.focus()
+  else sections[currentIndex - 1]?.focus()
 }
 
 export interface PanelProps {
-  id?: string
-  index?: number
-  children:
-    | React.ReactNode
-    | React.ReactNode[]
-    | JSX.Element[]
-    | JSX.Element
-    | ((context: PanelContextValue) => React.ReactNode)
+  closeOnEscape?: boolean
+  openClass?: string
+  closedClass?: string
+  openStyle?: React.CSSProperties
+  closedStyle?: React.CSSProperties
+  children: React.ReactElement
 }
 
-export const Panel: React.FC<PanelProps> = ({id, index, children}) => {
-  const {isActive, activate, deactivate, registerPanel} = useAccordion()
-  const triggerRef = useRef<HTMLElement>(null)
-  const realId = `collapse--${useId(id)}`
-
-  useEffect(
-    () => registerPanel(index as number, triggerRef.current as HTMLElement),
-    []
+export const Panel: React.FC<PanelProps> = ({
+  closeOnEscape = true,
+  openClass,
+  closedClass,
+  openStyle,
+  closedStyle,
+  children,
+}) => {
+  const {id, isOpen, close, triggerRef} = useSection()
+  // handles closing the modal when the ESC key is pressed
+  const prevOpen = useRef<boolean>(isOpen)
+  const focusRef = useConditionalFocus(!prevOpen.current && isOpen, true)
+  const ref = useMergedRef(
+    // @ts-ignore
+    children.ref,
+    focusRef,
+    useKeycode(27, () => {
+      if (closeOnEscape) {
+        close()
+        triggerRef.current?.focus()
+      }
+    })
   )
+  // ensures the accordion content won't be granted the window's focus
+  // by default
+  useLayoutEffect(() => {
+    prevOpen.current = isOpen
+  }, [isOpen])
 
-  const context = useMemo(
-    () => ({
-      id: realId,
-      index: index as number,
-      open: () => activate(index),
-      close: () => deactivate(index),
-      toggle: () => (isActive(index) ? deactivate(index) : activate(index)),
-      isOpen: isActive(index),
-      triggerRef,
-    }),
-    [realId, index, activate, deactivate, isActive]
-  )
+  return cloneElement(children, {
+    id,
+    className:
+      clsx(children.props.className, isOpen ? openClass : closedClass) ||
+      void 0,
+    style: Object.assign(
+      {visibility: isOpen ? 'visible' : 'hidden'},
+      children.props.style,
+      isOpen ? openStyle : closedStyle
+    ),
+    'aria-hidden': `${!isOpen}`,
+    ref,
+  })
+}
 
-  return (
-    <PanelContext.Provider
-      value={context}
-      // @ts-ignore
-      children={typeof children === 'function' ? children(context) : children}
-    />
-  )
+export interface CloseProps {
+  children: JSX.Element | React.ReactElement
+}
+
+export const Close: React.FC<CloseProps> = ({children}) => {
+  const {allowAllClosed, active} = useAccordion()
+  const {close, isOpen, id} = useSection()
+
+  return cloneElement(children, {
+    'aria-controls': id,
+    'aria-expanded': String(isOpen),
+    'aria-label': children.props['aria-label'] || 'Close section',
+    'aria-disabled': String(!allowAllClosed && isOpen && active.length === 1),
+    onClick: useCallback(
+      e => {
+        close()
+        children.props.onClick?.(e)
+      },
+      [close, children.props.onClick]
+    ),
+  })
 }
 
 /* istanbul ignore next */
 if (__DEV__) {
   Accordion.displayName = 'Accordion'
+  Section.displayName = 'Section'
   Panel.displayName = 'Panel'
-  Target.displayName = 'Target'
   Trigger.displayName = 'Trigger'
   Close.displayName = 'Close'
 }

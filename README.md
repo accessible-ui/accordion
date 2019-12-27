@@ -29,53 +29,136 @@
 <pre align="center">npm i @accessible/accordion</pre>
 <hr>
 
-An accessible and versatile accordion for React
+An accessible and versatile accordion for React with keyboard navigation and labeling features taught in
+[w3.org's WAI-ARIA accordion best practices example](https://www.w3.org/TR/wai-aria-practices/examples/accordion/accordion.html).
 
 ## Features
+
 - **Style-agnostic** You can use this component with the styling library of your choice. It
   works with CSS-in-JS, SASS, plain CSS, plain `style` objects, anything!
-- *aria-compliant keyboard navigation* Keyboard navigation is compliant with the examples shown [here](https://www.w3.org/TR/wai-aria-practices/examples/accordion/accordion.html)
+- **a11y/aria-compliant** This component works with screen readers out of the box and manages
+  focus for you.
 
 ## Quick Start
+
 [Check out the example on CodeSandbox](https://codesandbox.io/s/accessibleaccordion-example-7ylck)
 
 ```jsx harmony
-import {Accordion, Panel, Trigger, Target} from '@accessible/accordion'
+import {Accordion, Section, Trigger, Panel} from '@accessible/accordion'
 
 const Component = () => (
   <Accordion defaultActive={0}>
-    <Panel>
-      <Trigger>
-        <h2>Section 1</h2>
-      </Trigger>
-      <Target>
-        <div className='panel'>
-          Section 1 content
-        </div>
-      </Target>
-    </Panel>
+    <Section>
+      <h3>
+        <Trigger>
+          <button>Section 1</button>
+        </Trigger>
+      </h3>
+      <Panel>
+        <div className="panel">Section 1 content</div>
+      </Panel>
+    </Section>
 
-    <Panel>
-      <Trigger>
-        <h2>Section 2</h2>
-      </Trigger>
-      <Target>
-        <div className='panel'>
-          Section 2 content
-        </div>
-      </Target>
-    </Panel>
+    <Section>
+      <h3>
+        <Trigger>
+          <button>Section 2</button>
+        </Trigger>
+      </h3>
+      <Panel>
+        <div className="panel">Section 2 content</div>
+      </Panel>
+    </Section>
   </Accordion>
 )
 ```
 
 ## API
 
-### Props
+### Components
+
+| Component                   | Description                                                                                                                 |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| [`<Accordion>`](#accordion) | This component creates the context for your accordion section and contains some configuration options.                      |
+| [`<Section>`](#section)     | This component creates the context for the accordion panel and trigger contained in this section.                           |
+| [`<Trigger>`](#trigger)     | This component clones any React element and turns it into a accordion trigger that controls the visible state of the panel. |
+| [`<Panel>`](#panel)         | This component clones any React element and turns it into a accordion panel.                                                |
+| [`<Close>`](#close)         | This is a convenience component that clones any React element and adds an onClick handler to close its parent panel.        |  |
+
+### Hooks
+
+| Hook                              | Description                                                                                                    |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [`useAccordion()`](#useaccordion) | This hook provides the value of the accordion's [AccordionContextValue object](#accordioncontextvalue).        |
+| [`useSection()`](#useaccordion)   | This hook provides the value of the accordion sections's [SectionContextValue object](#sectioncontextvalue). |
+| [`useControls()`](#usecontrols)   | This hook provides access to the accordion sections's `open`, `close`, and `toggle` functions.   |
+| [`useIsOpen()`](#useisopen)       | This hook provides access to the accordion sections's `isOpen` value.                                          |
+
+### `<Accordion>`
+
+This component creates the context for your accordion section and contains some configuration options.
+
+#### Props
 
 | Prop | Type | Default | Required? | Description |
 | ---- | ---- | ------- | --------- | ----------- |
 |      |      |         |           |             |
+
+### `<Section>`
+
+This component creates the context for the accordion panel and trigger contained in this section.
+
+#### Props
+
+| Prop | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+### `<Trigger>`
+
+This component clones any React element and turns it into a accordion trigger that controls the visible state of the panel.
+
+#### Props
+
+| Prop | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+### `<Panel>`
+
+This component clones any React element and turns it into a accordion panel.
+
+#### Props
+
+| Prop | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+### `<Close>`
+
+This is a convenience component that clones any React element and adds an onClick handler to close its parent panel.
+
+#### Props
+
+| Prop | Type | Default | Required? | Description |
+| ---- | ---- | ------- | --------- | ----------- |
+|      |      |         |           |             |
+
+### `useAccordion()`
+
+This hook provides the value of the accordion's [AccordionContextValue object](#accordioncontextvalue).
+
+### `useSection()`
+
+This hook provides the value of the accordion sections's [SectionContextValue object](#sectioncontextvalue). 
+
+### `useControls()`
+
+This hook provides access to the accordion sections's `open`, `close`, and `toggle` functions.
+
+### `useIsOpen()`
+
+This hook provides access to the accordion sections's `isOpen` value. 
 
 ## LICENSE
 
