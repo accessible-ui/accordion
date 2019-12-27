@@ -154,7 +154,7 @@ export interface SectionContextValue {
   open: () => void
   close: () => void
   toggle: () => void
-  id: string
+  id?: string
   index: number
   triggerRef: React.MutableRefObject<HTMLElement | null>
 }
@@ -191,7 +191,7 @@ export interface SectionProps {
 export const Section: React.FC<SectionProps> = ({id, index, children}) => {
   const {isActive, activate, deactivate, registerSection} = useAccordion()
   const triggerRef = useRef<HTMLElement>(null)
-  const realId = `section--${useId(id)}`
+  id = useId(id)
 
   useEffect(
     () => registerSection(index as number, triggerRef.current as HTMLElement),
@@ -200,7 +200,7 @@ export const Section: React.FC<SectionProps> = ({id, index, children}) => {
 
   const context = useMemo(
     () => ({
-      id: realId,
+      id,
       index: index as number,
       open: () => activate(index),
       close: () => deactivate(index),
@@ -208,7 +208,7 @@ export const Section: React.FC<SectionProps> = ({id, index, children}) => {
       isOpen: isActive(index),
       triggerRef,
     }),
-    [realId, index, activate, deactivate, isActive]
+    [id, index, activate, deactivate, isActive]
   )
 
   return (

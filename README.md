@@ -77,36 +77,38 @@ const Component = () => (
 
 ### Components
 
-| Component                   | Description                                                                                                                 |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| [`<Accordion>`](#accordion) | This component creates the context for your accordion section and contains some configuration options.                      |
-| [`<Section>`](#section)     | This component creates the context for the accordion panel and trigger contained in this section.                           |
-| [`<Trigger>`](#trigger)     | This component clones any React element and turns it into a accordion trigger that controls the visible state of the panel. |
-| [`<Panel>`](#panel)         | This component clones any React element and turns it into a accordion panel.                                                |
-| [`<Close>`](#close)         | This is a convenience component that clones any React element and adds an onClick handler to close its parent panel.        |  |
+| Component                   | Description                                                                                                                                                      |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`<Accordion>`](#accordion) | This component creates the context for your accordion section and contains some configuration options.                                                           |
+| [`<Section>`](#section)     | This component creates the context for the accordion panel and trigger contained in this section. It must be a direct descendent of [`<Accordion>`](#accordion). |
+| [`<Trigger>`](#trigger)     | This component clones any React element and turns it into a accordion trigger that controls the visible state of the panel.                                      |
+| [`<Panel>`](#panel)         | This component clones any React element and turns it into a accordion panel.                                                                                     |
+| [`<Close>`](#close)         | This is a convenience component that clones any React element and adds an onClick handler to close its parent panel.                                             |  |
 
 ### Hooks
 
-| Hook                              | Description                                                                                                    |
-| --------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [`useAccordion()`](#useaccordion) | This hook provides the value of the accordion's [AccordionContextValue object](#accordioncontextvalue).        |
+| Hook                              | Description                                                                                                  |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [`useAccordion()`](#useaccordion) | This hook provides the value of the accordion's [AccordionContextValue object](#accordioncontextvalue).      |
 | [`useSection()`](#useaccordion)   | This hook provides the value of the accordion sections's [SectionContextValue object](#sectioncontextvalue). |
-| [`useControls()`](#usecontrols)   | This hook provides access to the accordion sections's `open`, `close`, and `toggle` functions.   |
-| [`useIsOpen()`](#useisopen)       | This hook provides access to the accordion sections's `isOpen` value.                                          |
+| [`useControls()`](#usecontrols)   | This hook provides access to the accordion sections's `open`, `close`, and `toggle` functions.               |
+| [`useIsOpen()`](#useisopen)       | This hook provides access to the accordion sections's `isOpen` value.                                        |
 
 ### `<Accordion>`
 
 This component creates the context for your accordion section and contains some configuration options.
+[`<Section>`s](#accordion) are the only type of children allowed.
 
 #### Props
 
-| Prop | Type | Default | Required? | Description |
-| ---- | ---- | ------- | --------- | ----------- |
-|      |      |         |           |             |
+| Prop     | Type                                 | Default     | Required? | Description |
+| -------- | ------------------------------------ | ----------- | --------- | ----------- |
+| children | `React.ReactElement<SectionProps>[]` | `undefined` | Yes       |             |
 
 ### `<Section>`
 
-This component creates the context for the accordion panel and trigger contained in this section.
+This component creates the context for the accordion panel and trigger contained in this section. It must be a direct
+descendent of [`<Accordion>`](#accordion).
 
 #### Props
 
@@ -150,7 +152,7 @@ This hook provides the value of the accordion's [AccordionContextValue object](#
 
 ### `useSection()`
 
-This hook provides the value of the accordion sections's [SectionContextValue object](#sectioncontextvalue). 
+This hook provides the value of the accordion sections's [SectionContextValue object](#sectioncontextvalue).
 
 ### `useControls()`
 
@@ -158,7 +160,7 @@ This hook provides access to the accordion sections's `open`, `close`, and `togg
 
 ### `useIsOpen()`
 
-This hook provides access to the accordion sections's `isOpen` value. 
+This hook provides access to the accordion sections's `isOpen` value.
 
 ## LICENSE
 
