@@ -5,9 +5,8 @@ import React, {
   useMemo,
   useEffect,
   useContext,
-  useCallback,
 } from 'react'
-import useKeycode from '@accessible/use-keycode'
+import {useKeycodes} from '@accessible/use-keycode'
 import useConditionalFocus from '@accessible/use-conditional-focus'
 import useMergedRef from '@react-hook/merged-ref'
 import useLayoutEffect from '@react-hook/passive-layout-effect'
@@ -242,26 +241,28 @@ export const Trigger: React.FC<TriggerProps> = ({
     // @ts-ignore
     children.ref,
     triggerRef,
-    // space bar
-    useKeycode(32, e => {
-      // prevents click event from firing if the trigger is a button
-      e?.preventDefault()
-      toggle()
-    }),
-    // enter
-    useKeycode(13, () => {
-      // prevents enter event from firing if the trigger is a button
-      if (!clicked.current) toggle()
-      clicked.current = false
-    }),
-    // down arrow
-    useKeycode(40, () => focusNext(sections, index)),
-    // up arrow
-    useKeycode(38, () => focusPrev(sections, index)),
-    // home
-    useKeycode(36, () => sections[0]?.focus()),
-    // end
-    useKeycode(35, () => sections[sections.length - 1]?.focus())
+    useKeycodes({
+      // space bar
+      32: e => {
+        // prevents click event from firing if the trigger is a button
+        e?.preventDefault()
+        toggle()
+      },
+      // enter
+      13: () => {
+        // prevents enter event from firing if the trigger is a button
+        if (!clicked.current) toggle()
+        clicked.current = false
+      },
+      // down arrow
+      40: () => focusNext(sections, index),
+      // up arrow
+      38: () => focusPrev(sections, index),
+      // home
+      36: () => sections[0]?.focus(),
+      // end
+      35: () => sections[sections.length - 1]?.focus(),
+    })
   )
 
   useLayoutEffect(() => {
@@ -289,14 +290,11 @@ export const Trigger: React.FC<TriggerProps> = ({
       isOpen ? openStyle : closedStyle
     ),
     tabIndex: children.props.tabIndex !== void 0 ? children.props.tabIndex : 0,
-    onClick: useCallback(
-      e => {
-        toggle()
-        clicked.current = true
-        children.props.onClick?.(e)
-      },
-      [toggle, children.props.onClick]
-    ),
+    onClick: e => {
+      toggle()
+      clicked.current = true
+      children.props.onClick?.(e)
+    },
     ref,
   })
 }
@@ -342,11 +340,13 @@ export const Panel: React.FC<PanelProps> = ({
     // @ts-ignore
     children.ref,
     focusRef,
-    useKeycode(27, () => {
-      if (closeOnEscape) {
-        close()
-        triggerRef.current?.focus()
-      }
+    useKeycodes({
+      27: () => {
+        if (closeOnEscape) {
+          close()
+          triggerRef.current?.focus()
+        }
+      },
     })
   )
   // ensures the accordion content won't be granted the window's focus
@@ -356,6 +356,7 @@ export const Panel: React.FC<PanelProps> = ({
   }, [isOpen])
 
   return cloneElement(children, {
+    'aria-hidden': `${!isOpen}`,
     id,
     className:
       clsx(children.props.className, isOpen ? openClass : closedClass) ||
@@ -365,7 +366,6 @@ export const Panel: React.FC<PanelProps> = ({
       children.props.style,
       isOpen ? openStyle : closedStyle
     ),
-    'aria-hidden': `${!isOpen}`,
     ref,
   })
 }
@@ -383,13 +383,10 @@ export const Close: React.FC<CloseProps> = ({children}) => {
     'aria-expanded': String(isOpen),
     'aria-label': children.props['aria-label'] || 'Close section',
     'aria-disabled': String(!allowAllClosed && isOpen && active.length === 1),
-    onClick: useCallback(
-      e => {
-        close()
-        children.props.onClick?.(e)
-      },
-      [close, children.props.onClick]
-    ),
+    onClick: e => {
+      close()
+      children.props.onClick?.(e)
+    },
   })
 }
 
