@@ -299,7 +299,7 @@ export const Trigger: React.FC<TriggerProps> = ({
   })
 }
 
-export const focusNext = (
+const focusNext = (
   sections: (HTMLElement | undefined)[],
   currentIndex: number
 ) => {
@@ -307,7 +307,7 @@ export const focusNext = (
   else sections[currentIndex + 1]?.focus()
 }
 
-export const focusPrev = (
+const focusPrev = (
   sections: (HTMLElement | undefined)[],
   currentIndex: number
 ) => {
