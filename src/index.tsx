@@ -19,10 +19,10 @@ const __DEV__ =
 export interface AccordionContextValue {
   sections: (HTMLElement | undefined)[]
   registerSection: (index: number, trigger: HTMLElement) => () => void
-  active: number[]
-  activate: (section: number | undefined) => void
-  deactivate: (section: number | undefined) => void
-  isActive: (section: number | undefined) => boolean
+  opened: number[]
+  open: (section: number | undefined) => void
+  close: (section: number | undefined) => void
+  isOpen: (section: number | undefined) => boolean
   allowAllClosed: boolean
 }
 
@@ -34,11 +34,11 @@ export const AccordionContext: React.Context<AccordionContextValue> = React.crea
   useAccordion = () => useContext<AccordionContextValue>(AccordionContext)
 
 export interface AccordionProps {
-  active?: number | number[]
-  defaultActive?: number | number[]
+  open?: number | number[]
+  defaultOpen?: number | number[]
   allowMultipleOpen?: boolean
   allowAllClosed?: boolean
-  onChange?: (active: number | number[]) => void
+  onChange?: (opened: number | number[]) => void
   children:
     | React.ReactElement
     | React.ReactElement[]
@@ -47,33 +47,33 @@ export interface AccordionProps {
 }
 
 export const Accordion: React.FC<AccordionProps> = ({
-  active,
-  defaultActive,
+  open,
+  defaultOpen,
   allowMultipleOpen = false,
   allowAllClosed = false,
   onChange,
   children,
 }) => {
   const [sections, setSections] = useState<(HTMLElement | undefined)[]>([])
-  const [userActive, setActive] = useState<number[]>(
-    Array.isArray(defaultActive)
-      ? defaultActive
-      : typeof defaultActive === 'number'
-      ? [defaultActive]
+  const [userOpen, setOpen] = useState<number[]>(
+    Array.isArray(defaultOpen)
+      ? defaultOpen
+      : typeof defaultOpen === 'number'
+      ? [defaultOpen]
       : []
   )
 
-  const nextActive =
-    typeof active === 'undefined'
-      ? userActive
-      : Array.isArray(active)
-      ? active
-      : [active]
+  const nextOpen =
+    typeof open === 'undefined'
+      ? userOpen
+      : Array.isArray(open)
+      ? open
+      : [open]
 
   if (__DEV__) {
-    if (!allowAllClosed && nextActive.length === 0) {
+    if (!allowAllClosed && nextOpen.length === 0) {
       throw new Error(
-        `Accordion requires at least one section to be open, but there were no active sections.`
+        `Accordion requires at least one section to be open, but there were no opened sections.`
       )
     }
 
@@ -107,31 +107,31 @@ export const Accordion: React.FC<AccordionProps> = ({
             return next
           })
       },
-      active: nextActive,
-      activate: (index: number | undefined) =>
-        setActive(current => {
+      opened: nextOpen,
+      open: (index: number | undefined) =>
+        setOpen(current => {
           if (index === void 0 || current.indexOf(index) > -1) return current
           if (allowMultipleOpen) return current.concat(index)
           return [index]
         }),
-      deactivate: (index: number | undefined) =>
-        setActive(current => {
+      close: (index: number | undefined) =>
+        setOpen(current => {
           if (index === void 0 || current.indexOf(index) === -1) return current
           if (current.length === 1 && !allowAllClosed) return current
           return current
             .slice(0, current.indexOf(index))
             .concat(current.slice(current.indexOf(index) + 1))
         }),
-      isActive: (index: number | undefined) =>
-        index !== void 0 && nextActive.indexOf(index) > -1,
+      isOpen: (index: number | undefined) =>
+        index !== void 0 && nextOpen.indexOf(index) > -1,
       allowAllClosed,
     }),
-    [sections, nextActive, allowMultipleOpen, allowAllClosed]
+    [sections, nextOpen, allowMultipleOpen, allowAllClosed]
   )
 
   useEffect(() => {
-    onChange?.(allowMultipleOpen ? nextActive : nextActive[0])
-  }, [nextActive])
+    onChange?.(allowMultipleOpen ? nextOpen : nextOpen[0])
+  }, [nextOpen])
 
   return (
     <AccordionContext.Provider value={context}>
@@ -188,7 +188,7 @@ export interface SectionProps {
 }
 
 export const Section: React.FC<SectionProps> = ({id, index, children}) => {
-  const {isActive, activate, deactivate, registerSection} = useAccordion()
+  const {isOpen, open, close, registerSection} = useAccordion()
   const triggerRef = useRef<HTMLElement>(null)
   id = useId(id)
 
@@ -201,13 +201,13 @@ export const Section: React.FC<SectionProps> = ({id, index, children}) => {
     () => ({
       id,
       index: index as number,
-      open: () => activate(index),
-      close: () => deactivate(index),
-      toggle: () => (isActive(index) ? deactivate(index) : activate(index)),
-      isOpen: isActive(index),
+      open: () => open(index),
+      close: () => close(index),
+      toggle: () => (isOpen(index) ? close(index) : open(index)),
+      isOpen: isOpen(index),
       triggerRef,
     }),
-    [id, index, activate, deactivate, isActive]
+    [id, index, open, close, isOpen]
   )
 
   return (
@@ -234,7 +234,7 @@ export const Trigger: React.FC<TriggerProps> = ({
   closedStyle,
   children,
 }) => {
-  const {sections, active, allowAllClosed} = useAccordion()
+  const {sections, opened, allowAllClosed} = useAccordion()
   const {isOpen, id, index, toggle, triggerRef} = useSection()
   const clicked = useRef(false)
   const ref = useMergedRef(
@@ -280,7 +280,7 @@ export const Trigger: React.FC<TriggerProps> = ({
   return cloneElement(children, {
     'aria-controls': id,
     'aria-expanded': String(isOpen),
-    'aria-disabled': String(!allowAllClosed && isOpen && active.length === 1),
+    'aria-disabled': String(!allowAllClosed && isOpen && opened.length === 1),
     className:
       clsx(children.props.className, isOpen ? openClass : closedClass) ||
       void 0,
@@ -375,14 +375,14 @@ export interface CloseProps {
 }
 
 export const Close: React.FC<CloseProps> = ({children}) => {
-  const {allowAllClosed, active} = useAccordion()
+  const {allowAllClosed, opened} = useAccordion()
   const {close, isOpen, id} = useSection()
 
   return cloneElement(children, {
     'aria-controls': id,
     'aria-expanded': String(isOpen),
     'aria-label': children.props['aria-label'] || 'Close section',
-    'aria-disabled': String(!allowAllClosed && isOpen && active.length === 1),
+    'aria-disabled': String(!allowAllClosed && isOpen && opened.length === 1),
     onClick: e => {
       close()
       children.props.onClick?.(e)
