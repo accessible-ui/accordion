@@ -63,9 +63,9 @@ export const Accordion: React.FC<AccordionProps> = ({
       ? [defaultOpen]
       : []
   )
-
   const nextOpen =
     typeof open === 'undefined' ? userOpen : Array.isArray(open) ? open : [open]
+  const prevOpen = useRef<number[]>(nextOpen)
 
   if (__DEV__) {
     if (!allowAllClosed && nextOpen.length === 0) {
@@ -127,7 +127,9 @@ export const Accordion: React.FC<AccordionProps> = ({
   )
 
   useEffect(() => {
-    onChange?.(allowMultipleOpen ? nextOpen : nextOpen[0])
+    prevOpen.current !== nextOpen &&
+      onChange?.(allowMultipleOpen ? nextOpen : nextOpen[0])
+    prevOpen.current = nextOpen
   }, [nextOpen])
 
   return (
@@ -254,7 +256,9 @@ export const Trigger: React.FC<TriggerProps> = ({
       {cloneElement(children, {
         'aria-controls': id,
         'aria-expanded': String(isOpen),
-        'aria-disabled': String(!allowAllClosed && isOpen && opened.length === 1),
+        'aria-disabled': String(
+          !allowAllClosed && isOpen && opened.length === 1
+        ),
         className:
           clsx(children.props.className, isOpen ? openClass : closedClass) ||
           void 0,
@@ -263,10 +267,12 @@ export const Trigger: React.FC<TriggerProps> = ({
           children.props.style,
           isOpen ? openStyle : closedStyle
         ),
-        onClick: children.props.onClick ? e => {
-          toggle()
-          children.props.onClick(e)
-        } : toggle,
+        onClick: children.props.onClick
+          ? e => {
+              toggle()
+              children.props.onClick(e)
+            }
+          : toggle,
         ref,
       })}
     </Button>
