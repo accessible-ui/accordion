@@ -8,9 +8,10 @@ import React, {
 } from 'react'
 import {useKeycodes} from '@accessible/use-keycode'
 import useConditionalFocus from '@accessible/use-conditional-focus'
+import useId from '@accessible/use-id'
+import Button from '@accessible/button'
 import useMergedRef from '@react-hook/merged-ref'
 import useLayoutEffect from '@react-hook/passive-layout-effect'
-import useId from '@accessible/use-id'
 import clsx from 'clsx'
 
 const __DEV__ =
@@ -64,11 +65,7 @@ export const Accordion: React.FC<AccordionProps> = ({
   )
 
   const nextOpen =
-    typeof open === 'undefined'
-      ? userOpen
-      : Array.isArray(open)
-      ? open
-      : [open]
+    typeof open === 'undefined' ? userOpen : Array.isArray(open) ? open : [open]
 
   if (__DEV__) {
     if (!allowAllClosed && nextOpen.length === 0) {
@@ -236,24 +233,11 @@ export const Trigger: React.FC<TriggerProps> = ({
 }) => {
   const {sections, opened, allowAllClosed} = useAccordion()
   const {isOpen, id, index, toggle, triggerRef} = useSection()
-  const clicked = useRef(false)
   const ref = useMergedRef(
     // @ts-ignore
     children.ref,
     triggerRef,
     useKeycodes({
-      // space bar
-      32: e => {
-        // prevents click event from firing if the trigger is a button
-        e?.preventDefault()
-        toggle()
-      },
-      // enter
-      13: () => {
-        // prevents enter event from firing if the trigger is a button
-        if (!clicked.current) toggle()
-        clicked.current = false
-      },
       // down arrow
       40: () => focusNext(sections, index),
       // up arrow
@@ -265,38 +249,28 @@ export const Trigger: React.FC<TriggerProps> = ({
     })
   )
 
-  useLayoutEffect(() => {
-    // this bit of weirdness is here because someone could feasibly use a
-    // <button> as an accordion trigger which causes all sorts of keyboard
-    // nav issues (enter firing twice, space firing twice)
-    const current = triggerRef.current
-    if (current) {
-      const handleKeydown = () => (clicked.current = false)
-      current.addEventListener('keydown', handleKeydown)
-      return () => current.removeEventListener('keydown', handleKeydown)
-    }
-  }, [triggerRef.current])
-
-  return cloneElement(children, {
-    'aria-controls': id,
-    'aria-expanded': String(isOpen),
-    'aria-disabled': String(!allowAllClosed && isOpen && opened.length === 1),
-    className:
-      clsx(children.props.className, isOpen ? openClass : closedClass) ||
-      void 0,
-    style: Object.assign(
-      {},
-      children.props.style,
-      isOpen ? openStyle : closedStyle
-    ),
-    tabIndex: children.props.tabIndex !== void 0 ? children.props.tabIndex : 0,
-    onClick: e => {
-      toggle()
-      clicked.current = true
-      children.props.onClick?.(e)
-    },
-    ref,
-  })
+  return (
+    <Button>
+      {cloneElement(children, {
+        'aria-controls': id,
+        'aria-expanded': String(isOpen),
+        'aria-disabled': String(!allowAllClosed && isOpen && opened.length === 1),
+        className:
+          clsx(children.props.className, isOpen ? openClass : closedClass) ||
+          void 0,
+        style: Object.assign(
+          {},
+          children.props.style,
+          isOpen ? openStyle : closedStyle
+        ),
+        onClick: children.props.onClick ? e => {
+          toggle()
+          children.props.onClick(e)
+        } : toggle,
+        ref,
+      })}
+    </Button>
+  )
 }
 
 const focusNext = (
@@ -377,17 +351,25 @@ export interface CloseProps {
 export const Close: React.FC<CloseProps> = ({children}) => {
   const {allowAllClosed, opened} = useAccordion()
   const {close, isOpen, id} = useSection()
-
-  return cloneElement(children, {
-    'aria-controls': id,
-    'aria-expanded': String(isOpen),
-    'aria-label': children.props['aria-label'] || 'Close section',
-    'aria-disabled': String(!allowAllClosed && isOpen && opened.length === 1),
-    onClick: e => {
-      close()
-      children.props.onClick?.(e)
-    },
-  })
+  return (
+    <Button>
+      {cloneElement(children, {
+        'aria-controls': id,
+        'aria-expanded': String(isOpen),
+        'aria-label': children.props['aria-label'] || 'Close section',
+        'aria-disabled': String(
+          !allowAllClosed && isOpen && opened.length === 1
+        ),
+        onClick:
+          typeof children.props.onClick === 'function'
+            ? e => {
+                close()
+                children.props.onClick(e)
+              }
+            : close,
+      })}
+    </Button>
+  )
 }
 
 /* istanbul ignore next */
