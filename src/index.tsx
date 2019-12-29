@@ -154,6 +154,7 @@ export interface SectionContextValue {
   toggle: () => void
   id?: string
   index: number
+  disabled: boolean
   triggerRef: React.MutableRefObject<HTMLElement | null>
 }
 
@@ -170,6 +171,7 @@ export const SectionContext: React.Context<SectionContextValue> = React.createCo
   {Consumer: SectionConsumer} = SectionContext,
   useSection = () => useContext<SectionContextValue>(SectionContext),
   useIsOpen = () => useSection().isOpen,
+  useDisabled = () => useSection().disabled,
   useControls = (): SectionControls => {
     const {open, close, toggle} = useSection()
     return {open, close, toggle}
@@ -178,6 +180,7 @@ export const SectionContext: React.Context<SectionContextValue> = React.createCo
 export interface SectionProps {
   id?: string
   index?: number
+  disabled?: boolean
   children:
     | React.ReactNode
     | React.ReactNode[]
@@ -186,7 +189,12 @@ export interface SectionProps {
     | ((context: SectionContextValue) => React.ReactNode)
 }
 
-export const Section: React.FC<SectionProps> = ({id, index, children}) => {
+export const Section: React.FC<SectionProps> = ({
+  id,
+  index,
+  disabled = false,
+  children,
+}) => {
   const {isOpen, open, close, registerSection} = useAccordion()
   const triggerRef = useRef<HTMLElement>(null)
   id = useId(id)
@@ -200,13 +208,20 @@ export const Section: React.FC<SectionProps> = ({id, index, children}) => {
     () => ({
       id,
       index: index as number,
-      open: () => open(index),
-      close: () => close(index),
-      toggle: () => (isOpen(index) ? close(index) : open(index)),
+      open: () => {
+        !disabled && open(index)
+      },
+      close: () => {
+        !disabled && close(index)
+      },
+      toggle: () => {
+        !disabled && (isOpen(index) ? close(index) : open(index))
+      },
       isOpen: isOpen(index),
+      disabled,
       triggerRef,
     }),
-    [id, index, open, close, isOpen]
+    [id, index, open, close, isOpen, disabled]
   )
 
   return (
@@ -234,7 +249,7 @@ export const Trigger: React.FC<TriggerProps> = ({
   children,
 }) => {
   const {sections, opened, allowAllClosed} = useAccordion()
-  const {isOpen, id, index, toggle, triggerRef} = useSection()
+  const {isOpen, id, index, toggle, disabled, triggerRef} = useSection()
   const ref = useMergedRef(
     // @ts-ignore
     children.ref,
@@ -255,10 +270,10 @@ export const Trigger: React.FC<TriggerProps> = ({
     <Button>
       {cloneElement(children, {
         'aria-controls': id,
-        'aria-expanded': String(isOpen),
-        'aria-disabled': String(
-          !allowAllClosed && isOpen && opened.length === 1
-        ),
+        'aria-expanded': '' + isOpen,
+        'aria-disabled':
+          '' + (disabled || (!allowAllClosed && isOpen && opened.length === 1)),
+        tabIndex: disabled ? -1 : 0,
         className:
           clsx(children.props.className, isOpen ? openClass : closedClass) ||
           void 0,
@@ -361,11 +376,9 @@ export const Close: React.FC<CloseProps> = ({children}) => {
     <Button>
       {cloneElement(children, {
         'aria-controls': id,
-        'aria-expanded': String(isOpen),
+        'aria-expanded': '' + isOpen,
         'aria-label': children.props['aria-label'] || 'Close section',
-        'aria-disabled': String(
-          !allowAllClosed && isOpen && opened.length === 1
-        ),
+        'aria-disabled': '' + !allowAllClosed && isOpen && opened.length === 1,
         onClick:
           typeof children.props.onClick === 'function'
             ? e => {
