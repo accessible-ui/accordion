@@ -254,16 +254,19 @@ export const Trigger: React.FC<TriggerProps> = ({
     // @ts-ignore
     children.ref,
     triggerRef,
-    useKeycodes({
-      // down arrow
-      40: () => focusNext(sections, index),
-      // up arrow
-      38: () => focusPrev(sections, index),
-      // home
-      36: () => sections[0]?.focus(),
-      // end
-      35: () => sections[sections.length - 1]?.focus(),
-    })
+    useKeycodes(
+      {
+        // down arrow
+        40: () => focusNext(sections, index),
+        // up arrow
+        38: () => focusPrev(sections, index),
+        // home
+        36: () => sections[0]?.focus(),
+        // end
+        35: () => sections[sections.length - 1]?.focus(),
+      },
+      [sections, index]
+    )
   )
 
   return (
@@ -335,14 +338,17 @@ export const Panel: React.FC<PanelProps> = ({
     // @ts-ignore
     children.ref,
     focusRef,
-    useKeycodes({
-      27: () => {
-        if (closeOnEscape) {
-          close()
-          triggerRef.current?.focus()
-        }
+    useKeycodes(
+      {
+        27: () => {
+          if (closeOnEscape) {
+            close()
+            triggerRef.current?.focus()
+          }
+        },
       },
-    })
+      [closeOnEscape, close, triggerRef.current]
+    )
   )
   // ensures the accordion content won't be granted the window's focus
   // by default
