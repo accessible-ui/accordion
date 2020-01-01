@@ -3,6 +3,7 @@ import React, {
   useState,
   useRef,
   useMemo,
+  useCallback,
   useEffect,
   useContext,
 } from 'react'
@@ -56,24 +57,25 @@ export const Accordion: React.FC<AccordionProps> = ({
   children,
 }) => {
   const [sections, setSections] = useState<(HTMLElement | undefined)[]>([])
-  const [userOpen, setOpen] = useState<number[]>(
+  const [openState, setOpen] = useState<number[]>(
     Array.isArray(defaultOpen)
       ? defaultOpen
       : typeof defaultOpen === 'number'
       ? [defaultOpen]
       : []
   )
-  const nextOpen =
-    typeof open === 'undefined' ? userOpen : Array.isArray(open) ? open : [open]
+  const nextOpen = useMemo(
+    () =>
+      typeof open === 'undefined'
+        ? openState
+        : Array.isArray(open)
+        ? open
+        : [open],
+    [open, openState]
+  )
   const prevOpen = useRef<number[]>(nextOpen)
 
   if (__DEV__) {
-    if (!allowAllClosed && nextOpen.length === 0) {
-      throw new Error(
-        `Accordion requires at least one section to be open, but there were no opened sections.`
-      )
-    }
-
     React.Children.forEach(children, child => {
       if (
         (typeof child !== 'object' && child === null) ||
@@ -84,6 +86,18 @@ export const Accordion: React.FC<AccordionProps> = ({
         )
       }
     })
+
+    if (!allowMultipleOpen && nextOpen.length > 1) {
+      throw new Error(
+        `You must enable 'allowMultipleOpen' in order to open multiple sections at once.`
+      )
+    }
+
+    if (!allowAllClosed && nextOpen.length === 0) {
+      throw new Error(
+        `Accordion requires at least one section to be open, but there were no opened sections.`
+      )
+    }
   }
 
   const context = useMemo(
@@ -286,10 +300,13 @@ export const Trigger: React.FC<TriggerProps> = ({
           isOpen ? openStyle : closedStyle
         ),
         onClick: children.props.onClick
-          ? e => {
-              toggle()
-              children.props.onClick(e)
-            }
+          ? useCallback(
+              e => {
+                toggle()
+                children.props.onClick(e)
+              },
+              [toggle, children.props.onClick]
+            )
           : toggle,
         ref,
       })}
@@ -387,10 +404,13 @@ export const Close: React.FC<CloseProps> = ({children}) => {
         'aria-disabled': '' + !allowAllClosed && isOpen && opened.length === 1,
         onClick:
           typeof children.props.onClick === 'function'
-            ? e => {
-                close()
-                children.props.onClick(e)
-              }
+            ? useCallback(
+                e => {
+                  close()
+                  children.props.onClick(e)
+                },
+                [close, children.props.onClick]
+              )
             : close,
       })}
     </Button>

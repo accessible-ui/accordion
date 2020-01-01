@@ -1,0 +1,738 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Accordion> should not throw if it has no open sections and allowAllClosed is true 1`] = `
+<DocumentFragment>
+  <div />
+</DocumentFragment>
+`;
+
+exports[`<Accordion> should render multiple defaultOpen: index=0 open, index=1 open 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰5"
+    aria-disabled="false"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰5"
+    style="visibility: visible;"
+  />
+  <div
+    aria-controls="🅰6"
+    aria-disabled="false"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰6"
+    style="visibility: visible;"
+  />
+</DocumentFragment>
+`;
+
+exports[`<Accordion> should render multiple open: index=0 open, index=1 open 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰11"
+    aria-disabled="false"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰11"
+    style="visibility: visible;"
+  />
+  <div
+    aria-controls="🅰12"
+    aria-disabled="false"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰12"
+    style="visibility: visible;"
+  />
+</DocumentFragment>
+`;
+
+exports[`<Accordion> should render singular defaultOpen w/ array: index=0 closed, index=1 open 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰3"
+    aria-disabled="false"
+    aria-expanded="false"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    id="🅰3"
+    style="visibility: hidden;"
+  />
+  <div
+    aria-controls="🅰4"
+    aria-disabled="true"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰4"
+    style="visibility: visible;"
+  />
+</DocumentFragment>
+`;
+
+exports[`<Accordion> should render singular defaultOpen: index=0 closed, index=1 open 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰1"
+    aria-disabled="false"
+    aria-expanded="false"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    id="🅰1"
+    style="visibility: hidden;"
+  />
+  <div
+    aria-controls="🅰2"
+    aria-disabled="true"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰2"
+    style="visibility: visible;"
+  />
+</DocumentFragment>
+`;
+
+exports[`<Accordion> should render singular open w/ array: index=0 closed, index=1 open 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰9"
+    aria-disabled="false"
+    aria-expanded="false"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    id="🅰9"
+    style="visibility: hidden;"
+  />
+  <div
+    aria-controls="🅰10"
+    aria-disabled="true"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰10"
+    style="visibility: visible;"
+  />
+</DocumentFragment>
+`;
+
+exports[`<Accordion> should render singular open: index=0 closed, index=1 open 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰7"
+    aria-disabled="false"
+    aria-expanded="false"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    id="🅰7"
+    style="visibility: hidden;"
+  />
+  <div
+    aria-controls="🅰8"
+    aria-disabled="true"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰8"
+    style="visibility: visible;"
+  />
+</DocumentFragment>
+`;
+
+exports[`<Accordion> should throw if it has no child Sections 1`] = `"Accordion requires that all of its direct children be Section components."`;
+
+exports[`<Accordion> should throw if it has no open sections and allowAllClosed is false 1`] = `"Accordion requires at least one section to be open, but there were no opened sections."`;
+
+exports[`<Accordion> should throw on multiple defaultOpen if allowMultipleOpen is false 1`] = `"You must enable 'allowMultipleOpen' in order to open multiple sections at once."`;
+
+exports[`<Accordion> should throw on multiple open if allowMultipleOpen is false 1`] = `"You must enable 'allowMultipleOpen' in order to open multiple sections at once."`;
+
+exports[`<Close> should close its parent section if allowAllClosed is true: hidden 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰34"
+    aria-disabled="false"
+    aria-expanded="false"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    id="🅰34"
+    style="visibility: hidden;"
+  >
+    <button
+      aria-controls="🅰34"
+      aria-disabled="false"
+      aria-expanded="false"
+      aria-label="Close section"
+      data-testid="btn"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Close> should close its parent section if allowAllClosed is true: visible 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰34"
+    aria-disabled="false"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰34"
+    style="visibility: visible;"
+  >
+    <button
+      aria-controls="🅰34"
+      aria-disabled="true"
+      aria-expanded="true"
+      aria-label="Close section"
+      data-testid="btn"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Close> should fire child onClick: hidden 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰36"
+    aria-disabled="false"
+    aria-expanded="false"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    id="🅰36"
+    style="visibility: hidden;"
+  >
+    <button
+      aria-controls="🅰36"
+      aria-disabled="false"
+      aria-expanded="false"
+      aria-label="Close section"
+      data-testid="btn"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Close> should fire child onClick: visible 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰36"
+    aria-disabled="false"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰36"
+    style="visibility: visible;"
+  >
+    <button
+      aria-controls="🅰36"
+      aria-disabled="true"
+      aria-expanded="true"
+      aria-label="Close section"
+      data-testid="btn"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Close> should not close its parent section if allowAllClosed is false: visible [despite click] 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰35"
+    aria-disabled="true"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰35"
+    style="visibility: visible;"
+  >
+    <button
+      aria-controls="🅰35"
+      aria-disabled="true"
+      aria-expanded="true"
+      aria-label="Close section"
+      data-testid="btn"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Close> should not close its parent section if allowAllClosed is false: visible 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰35"
+    aria-disabled="true"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰35"
+    style="visibility: visible;"
+  >
+    <button
+      aria-controls="🅰35"
+      aria-disabled="true"
+      aria-expanded="true"
+      aria-label="Close section"
+      data-testid="btn"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should apply custom class: closed + custom 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰31"
+    aria-disabled="false"
+    aria-expanded="false"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    class="custom closed"
+    id="🅰31"
+    style="visibility: hidden;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should apply custom class: open + custom 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰31"
+    aria-disabled="false"
+    aria-expanded="true"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    class="custom open"
+    id="🅰31"
+    style="visibility: visible;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should apply custom styles: display: block, height: 300 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰32"
+    aria-disabled="false"
+    aria-expanded="true"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰32"
+    style="visibility: visible; height: 300px; display: block;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should apply custom styles: display: none, height: 300 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰32"
+    aria-disabled="false"
+    aria-expanded="false"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    id="🅰32"
+    style="visibility: hidden; height: 300px; display: none;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should apply open/closed classes: closed 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰29"
+    aria-disabled="false"
+    aria-expanded="false"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    class="closed"
+    id="🅰29"
+    style="visibility: hidden;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should apply open/closed classes: open 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰29"
+    aria-disabled="false"
+    aria-expanded="true"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    class="open"
+    id="🅰29"
+    style="visibility: visible;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should apply open/closed styles: display: block 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰30"
+    aria-disabled="false"
+    aria-expanded="true"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="🅰30"
+    style="visibility: visible; display: block;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should apply open/closed styles: display: none 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰30"
+    aria-disabled="false"
+    aria-expanded="false"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    id="🅰30"
+    style="visibility: hidden; display: none;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should close on escape: closed 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰33"
+    aria-disabled="false"
+    aria-expanded="false"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    data-testid="panel"
+    id="🅰33"
+    style="visibility: hidden; height: 300px; display: none;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should close on escape: closed initially 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰33"
+    aria-disabled="false"
+    aria-expanded="false"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    data-testid="panel"
+    id="🅰33"
+    style="visibility: hidden; height: 300px; display: none;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should close on escape: open 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰33"
+    aria-disabled="false"
+    aria-expanded="true"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    data-testid="panel"
+    id="🅰33"
+    style="visibility: visible; height: 300px; display: block;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Section> should override default ID: aria-controls=custom, id=custom 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="custom"
+    aria-disabled="true"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    id="custom"
+    style="visibility: visible;"
+  />
+</DocumentFragment>
+`;
+
+exports[`<Section> should provide context to child function 1`] = `
+Object {
+  "close": [Function],
+  "disabled": false,
+  "id": "custom",
+  "index": 0,
+  "isOpen": true,
+  "open": [Function],
+  "toggle": [Function],
+  "triggerRef": Object {
+    "current": null,
+  },
+}
+`;
+
+exports[`<Trigger> should apply custom class: closed + custom 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰26"
+    aria-disabled="false"
+    aria-expanded="false"
+    class="custom closed"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  >
+    open me
+  </button>
+</DocumentFragment>
+`;
+
+exports[`<Trigger> should apply custom class: open + custom 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰26"
+    aria-disabled="false"
+    aria-expanded="true"
+    class="custom open"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  >
+    open me
+  </button>
+</DocumentFragment>
+`;
+
+exports[`<Trigger> should apply custom styles: display: block, height: 300 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰27"
+    aria-disabled="false"
+    aria-expanded="true"
+    data-testid="btn"
+    role="button"
+    style="height: 300px; display: block;"
+    tabindex="0"
+  >
+    open me
+  </button>
+</DocumentFragment>
+`;
+
+exports[`<Trigger> should apply custom styles: display: none, height: 300 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰27"
+    aria-disabled="false"
+    aria-expanded="false"
+    data-testid="btn"
+    role="button"
+    style="height: 300px; display: none;"
+    tabindex="0"
+  >
+    open me
+  </button>
+</DocumentFragment>
+`;
+
+exports[`<Trigger> should apply open/closed classes: closed 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰24"
+    aria-disabled="false"
+    aria-expanded="false"
+    class="closed"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  >
+    open me
+  </button>
+</DocumentFragment>
+`;
+
+exports[`<Trigger> should apply open/closed classes: open 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰24"
+    aria-disabled="false"
+    aria-expanded="true"
+    class="open"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  >
+    open me
+  </button>
+</DocumentFragment>
+`;
+
+exports[`<Trigger> should apply open/closed styles: display: block 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰25"
+    aria-disabled="false"
+    aria-expanded="true"
+    data-testid="btn"
+    role="button"
+    style="display: block;"
+    tabindex="0"
+  >
+    open me
+  </button>
+</DocumentFragment>
+`;
+
+exports[`<Trigger> should apply open/closed styles: display: none 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰25"
+    aria-disabled="false"
+    aria-expanded="false"
+    data-testid="btn"
+    role="button"
+    style="display: none;"
+    tabindex="0"
+  >
+    open me
+  </button>
+</DocumentFragment>
+`;
