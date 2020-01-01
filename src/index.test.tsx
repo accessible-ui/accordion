@@ -2,14 +2,23 @@
 import React from 'react'
 // import {renderHook} from '@testing-library/react-hooks'
 import {render, fireEvent, act} from '@testing-library/react'
-import {Accordion, Section, Trigger, Panel, Close, useControls, useDisabled, useIsOpen} from './index'
+import {
+  Accordion,
+  Section,
+  Trigger,
+  Panel,
+  Close,
+  useControls,
+  useDisabled,
+  useIsOpen,
+} from './index'
 
-const silenceErrors = (test: ((...args: any[]) => void)) => () => {
-  const originalError = console.error;
-  console.error = jest.fn();
+const silenceErrors = (test: (...args: any[]) => void) => () => {
+  const originalError = console.error
+  console.error = jest.fn()
   // eslint-disable-next-line jest/expect-expect
   test()
-  console.error = originalError;
+  console.error = originalError
 }
 
 const click_ = fireEvent.click
@@ -19,146 +28,250 @@ fireEvent.click = (...args) => {
 }
 
 describe('<Accordion>', () => {
-  it('should throw if it has no child Sections', silenceErrors(() => {
-    expect(() => render(
-      <Accordion><div/></Accordion>
-    )).toThrowErrorMatchingSnapshot()
-  }))
+  it(
+    'should throw if it has no child Sections',
+    silenceErrors(() => {
+      expect(() =>
+        render(
+          <Accordion>
+            <div />
+          </Accordion>
+        )
+      ).toThrowErrorMatchingSnapshot()
+    })
+  )
 
-  it('should throw if it has no open sections and allowAllClosed is false', silenceErrors(() => {
-    expect(() => render(
-      <Accordion>
-        <Section><div/></Section>
-      </Accordion>
-    )).toThrowErrorMatchingSnapshot()
-  }))
+  it(
+    'should throw if it has no open sections and allowAllClosed is false',
+    silenceErrors(() => {
+      expect(() =>
+        render(
+          <Accordion>
+            <Section>
+              <div />
+            </Section>
+          </Accordion>
+        )
+      ).toThrowErrorMatchingSnapshot()
+    })
+  )
 
   it('should not throw if it has no open sections and allowAllClosed is true', () => {
-    expect(render(
-      <Accordion allowAllClosed>
-        <Section><div/></Section>
-      </Accordion>
-    ).asFragment()).toMatchSnapshot()
+    expect(
+      render(
+        <Accordion allowAllClosed>
+          <Section>
+            <div />
+          </Section>
+        </Accordion>
+      ).asFragment()
+    ).toMatchSnapshot()
   })
 
-  it('should throw on multiple defaultOpen if allowMultipleOpen is false', silenceErrors(() => {
-    expect(() => render(
-      <Accordion defaultOpen={[0, 1]}>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-      </Accordion>
-    ).asFragment()).toThrowErrorMatchingSnapshot()
-  }))
+  it(
+    'should throw on multiple defaultOpen if allowMultipleOpen is false',
+    silenceErrors(() => {
+      expect(() =>
+        render(
+          <Accordion defaultOpen={[0, 1]}>
+            <Section>
+              <Trigger>
+                <div />
+              </Trigger>
+              <Panel>
+                <div />
+              </Panel>
+            </Section>
+            <Section>
+              <Trigger>
+                <div />
+              </Trigger>
+              <Panel>
+                <div />
+              </Panel>
+            </Section>
+          </Accordion>
+        ).asFragment()
+      ).toThrowErrorMatchingSnapshot()
+    })
+  )
 
-  it('should throw on multiple open if allowMultipleOpen is false', silenceErrors(() => {
-    expect(() => render(
-      <Accordion open={[0, 1]}>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-      </Accordion>
-    ).asFragment()).toThrowErrorMatchingSnapshot()
-  }))
+  it(
+    'should throw on multiple open if allowMultipleOpen is false',
+    silenceErrors(() => {
+      expect(() =>
+        render(
+          <Accordion open={[0, 1]}>
+            <Section>
+              <Trigger>
+                <div />
+              </Trigger>
+              <Panel>
+                <div />
+              </Panel>
+            </Section>
+            <Section>
+              <Trigger>
+                <div />
+              </Trigger>
+              <Panel>
+                <div />
+              </Panel>
+            </Section>
+          </Accordion>
+        ).asFragment()
+      ).toThrowErrorMatchingSnapshot()
+    })
+  )
 
   it('should render singular defaultOpen', () => {
-    expect(render(
-      <Accordion defaultOpen={1}>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-      </Accordion>
-    ).asFragment()).toMatchSnapshot('index=0 closed, index=1 open')
+    expect(
+      render(
+        <Accordion defaultOpen={1}>
+          <Section>
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+          <Section>
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+        </Accordion>
+      ).asFragment()
+    ).toMatchSnapshot('index=0 closed, index=1 open')
   })
 
   it('should render singular defaultOpen w/ array', () => {
-    expect(render(
-      <Accordion defaultOpen={[1]}>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-      </Accordion>
-    ).asFragment()).toMatchSnapshot('index=0 closed, index=1 open')
+    expect(
+      render(
+        <Accordion defaultOpen={[1]}>
+          <Section>
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+          <Section>
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+        </Accordion>
+      ).asFragment()
+    ).toMatchSnapshot('index=0 closed, index=1 open')
   })
 
   it('should render multiple defaultOpen', () => {
-    expect(render(
-      <Accordion allowMultipleOpen defaultOpen={[0, 1]}>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-      </Accordion>
-    ).asFragment()).toMatchSnapshot('index=0 open, index=1 open')
+    expect(
+      render(
+        <Accordion allowMultipleOpen defaultOpen={[0, 1]}>
+          <Section>
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+          <Section>
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+        </Accordion>
+      ).asFragment()
+    ).toMatchSnapshot('index=0 open, index=1 open')
   })
 
   it('should render singular open', () => {
-    expect(render(
-      <Accordion open={1}>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-      </Accordion>
-    ).asFragment()).toMatchSnapshot('index=0 closed, index=1 open')
+    expect(
+      render(
+        <Accordion open={1}>
+          <Section>
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+          <Section>
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+        </Accordion>
+      ).asFragment()
+    ).toMatchSnapshot('index=0 closed, index=1 open')
   })
 
   it('should render singular open w/ array', () => {
-    expect(render(
-      <Accordion open={[1]}>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-      </Accordion>
-    ).asFragment()).toMatchSnapshot('index=0 closed, index=1 open')
+    expect(
+      render(
+        <Accordion open={[1]}>
+          <Section>
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+          <Section>
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+        </Accordion>
+      ).asFragment()
+    ).toMatchSnapshot('index=0 closed, index=1 open')
   })
 
   it('should render multiple open', () => {
-    expect(render(
-      <Accordion allowMultipleOpen defaultOpen={[0, 1]}>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-        <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-      </Accordion>
-    ).asFragment()).toMatchSnapshot('index=0 open, index=1 open')
+    expect(
+      render(
+        <Accordion allowMultipleOpen defaultOpen={[0, 1]}>
+          <Section>
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+          <Section>
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+        </Accordion>
+      ).asFragment()
+    ).toMatchSnapshot('index=0 open, index=1 open')
   })
 
   it('should call onChange handler when open sections change', () => {
@@ -166,12 +279,20 @@ describe('<Accordion>', () => {
     const result = render(
       <Accordion open={0} onChange={cb}>
         <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
+          <Trigger>
+            <div />
+          </Trigger>
+          <Panel>
+            <div />
+          </Panel>
         </Section>
         <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
+          <Trigger>
+            <div />
+          </Trigger>
+          <Panel>
+            <div />
+          </Panel>
         </Section>
       </Accordion>
     )
@@ -181,12 +302,20 @@ describe('<Accordion>', () => {
     result.rerender(
       <Accordion open={1} onChange={cb}>
         <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
+          <Trigger>
+            <div />
+          </Trigger>
+          <Panel>
+            <div />
+          </Panel>
         </Section>
         <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
+          <Trigger>
+            <div />
+          </Trigger>
+          <Panel>
+            <div />
+          </Panel>
         </Section>
       </Accordion>
     )
@@ -199,12 +328,20 @@ describe('<Accordion>', () => {
     const result = render(
       <Accordion allowMultipleOpen open={[0]} onChange={cb}>
         <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
+          <Trigger>
+            <div />
+          </Trigger>
+          <Panel>
+            <div />
+          </Panel>
         </Section>
         <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
+          <Trigger>
+            <div />
+          </Trigger>
+          <Panel>
+            <div />
+          </Panel>
         </Section>
       </Accordion>
     )
@@ -214,12 +351,20 @@ describe('<Accordion>', () => {
     result.rerender(
       <Accordion allowMultipleOpen open={[0, 1]} onChange={cb}>
         <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
+          <Trigger>
+            <div />
+          </Trigger>
+          <Panel>
+            <div />
+          </Panel>
         </Section>
         <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
+          <Trigger>
+            <div />
+          </Trigger>
+          <Panel>
+            <div />
+          </Panel>
         </Section>
       </Accordion>
     )
@@ -234,10 +379,10 @@ describe(`<Section>`, () => {
 
     render(
       <Accordion defaultOpen={0}>
-        <Section id='custom'>
+        <Section id="custom">
           {context => {
             value = context
-            return <div/>
+            return <div />
           }}
         </Section>
       </Accordion>
@@ -254,7 +399,11 @@ describe(`<Section>`, () => {
         <Section disabled>
           {context => {
             close = context.close
-            return <Trigger><div data-testid='btn'/></Trigger>
+            return (
+              <Trigger>
+                <div data-testid="btn" />
+              </Trigger>
+            )
           }}
         </Section>
       </Accordion>
@@ -274,7 +423,11 @@ describe(`<Section>`, () => {
         <Section>
           {context => {
             close = context.close
-            return <Trigger><div data-testid='btn'/></Trigger>
+            return (
+              <Trigger>
+                <div data-testid="btn" />
+              </Trigger>
+            )
           }}
         </Section>
       </Accordion>
@@ -293,7 +446,11 @@ describe(`<Section>`, () => {
         <Section>
           {context => {
             close = context.close
-            return <Trigger><div data-testid='btn'/></Trigger>
+            return (
+              <Trigger>
+                <div data-testid="btn" />
+              </Trigger>
+            )
           }}
         </Section>
       </Accordion>
@@ -312,13 +469,13 @@ describe(`<Section>`, () => {
         <Section>
           {context => {
             indexes.add(context.index)
-            return <div/>
+            return <div />
           }}
         </Section>
         <Section>
           {context => {
             indexes.add(context.index)
-            return <div/>
+            return <div />
           }}
         </Section>
       </Accordion>
@@ -328,14 +485,20 @@ describe(`<Section>`, () => {
   })
 
   it(`should override default ID`, () => {
-    expect(render(
-      <Accordion defaultOpen={0}>
-        <Section id='custom'>
-          <Trigger><div/></Trigger>
-          <Panel><div/></Panel>
-        </Section>
-      </Accordion>
-    ).asFragment()).toMatchSnapshot('aria-controls=custom, id=custom')
+    expect(
+      render(
+        <Accordion defaultOpen={0}>
+          <Section id="custom">
+            <Trigger>
+              <div />
+            </Trigger>
+            <Panel>
+              <div />
+            </Panel>
+          </Section>
+        </Accordion>
+      ).asFragment()
+    ).toMatchSnapshot('aria-controls=custom, id=custom')
   })
 })
 
@@ -345,7 +508,7 @@ describe(`<Trigger>`, () => {
       <Accordion defaultOpen={0} allowAllClosed>
         <Section>
           <Trigger closedClass="closed" openClass="open">
-            <button data-testid='btn'>open me</button>
+            <button data-testid="btn">open me</button>
           </Trigger>
         </Section>
       </Accordion>
@@ -361,8 +524,11 @@ describe(`<Trigger>`, () => {
     const {getByTestId, asFragment} = render(
       <Accordion defaultOpen={0} allowAllClosed>
         <Section>
-          <Trigger closedStyle={{display: 'none'}} openStyle={{display: 'block'}}>
-            <button data-testid='btn'>open me</button>
+          <Trigger
+            closedStyle={{display: 'none'}}
+            openStyle={{display: 'block'}}
+          >
+            <button data-testid="btn">open me</button>
           </Trigger>
         </Section>
       </Accordion>
@@ -379,7 +545,9 @@ describe(`<Trigger>`, () => {
       <Accordion defaultOpen={0} allowAllClosed>
         <Section>
           <Trigger closedClass="closed" openClass="open">
-            <button data-testid='btn' className='custom'>open me</button>
+            <button data-testid="btn" className="custom">
+              open me
+            </button>
           </Trigger>
         </Section>
       </Accordion>
@@ -395,8 +563,13 @@ describe(`<Trigger>`, () => {
     const {getByTestId, asFragment} = render(
       <Accordion defaultOpen={0} allowAllClosed>
         <Section>
-          <Trigger closedStyle={{display: 'none'}} openStyle={{display: 'block'}}>
-            <button data-testid='btn' style={{height: 300}}>open me</button>
+          <Trigger
+            closedStyle={{display: 'none'}}
+            openStyle={{display: 'block'}}
+          >
+            <button data-testid="btn" style={{height: 300}}>
+              open me
+            </button>
           </Trigger>
         </Section>
       </Accordion>
@@ -415,7 +588,9 @@ describe(`<Trigger>`, () => {
       <Accordion defaultOpen={0} allowAllClosed>
         <Section>
           <Trigger>
-            <button data-testid='btn' onClick={cb}>open me</button>
+            <button data-testid="btn" onClick={cb}>
+              open me
+            </button>
           </Trigger>
         </Section>
       </Accordion>
@@ -433,7 +608,7 @@ describe(`<Panel>`, () => {
       <Accordion defaultOpen={0} allowAllClosed>
         <Section>
           <Trigger>
-            <button data-testid='btn'/>
+            <button data-testid="btn" />
           </Trigger>
           <Panel closedClass="closed" openClass="open">
             <div>open me</div>
@@ -453,7 +628,7 @@ describe(`<Panel>`, () => {
       <Accordion defaultOpen={0} allowAllClosed>
         <Section>
           <Trigger>
-            <button data-testid='btn'/>
+            <button data-testid="btn" />
           </Trigger>
           <Panel closedStyle={{display: 'none'}} openStyle={{display: 'block'}}>
             <div>open me</div>
@@ -473,10 +648,10 @@ describe(`<Panel>`, () => {
       <Accordion defaultOpen={0} allowAllClosed>
         <Section>
           <Trigger>
-            <button data-testid='btn'/>
+            <button data-testid="btn" />
           </Trigger>
           <Panel closedClass="closed" openClass="open">
-            <div className='custom'>open me</div>
+            <div className="custom">open me</div>
           </Panel>
         </Section>
       </Accordion>
@@ -493,7 +668,7 @@ describe(`<Panel>`, () => {
       <Accordion defaultOpen={0} allowAllClosed>
         <Section>
           <Trigger>
-            <button data-testid='btn'/>
+            <button data-testid="btn" />
           </Trigger>
           <Panel closedStyle={{display: 'none'}} openStyle={{display: 'block'}}>
             <div style={{height: 300}}>open me</div>
@@ -513,10 +688,12 @@ describe(`<Panel>`, () => {
       <Accordion allowAllClosed>
         <Section>
           <Trigger>
-            <button data-testid='btn'/>
+            <button data-testid="btn" />
           </Trigger>
           <Panel closedStyle={{display: 'none'}} openStyle={{display: 'block'}}>
-            <div data-testid='panel' style={{height: 300}}>open me</div>
+            <div data-testid="panel" style={{height: 300}}>
+              open me
+            </div>
           </Panel>
         </Section>
       </Accordion>
@@ -538,8 +715,16 @@ describe(`<Close>`, () => {
     const {asFragment, getByTestId} = render(
       <Accordion allowAllClosed defaultOpen={0}>
         <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div><Close><button data-testid='btn'/></Close></div></Panel>
+          <Trigger>
+            <div />
+          </Trigger>
+          <Panel>
+            <div>
+              <Close>
+                <button data-testid="btn" />
+              </Close>
+            </div>
+          </Panel>
         </Section>
       </Accordion>
     )
@@ -553,8 +738,16 @@ describe(`<Close>`, () => {
     const {asFragment, getByTestId} = render(
       <Accordion defaultOpen={0}>
         <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div><Close><button data-testid='btn'/></Close></div></Panel>
+          <Trigger>
+            <div />
+          </Trigger>
+          <Panel>
+            <div>
+              <Close>
+                <button data-testid="btn" />
+              </Close>
+            </div>
+          </Panel>
         </Section>
       </Accordion>
     )
@@ -570,8 +763,16 @@ describe(`<Close>`, () => {
     const {asFragment, getByTestId} = render(
       <Accordion allowAllClosed defaultOpen={0}>
         <Section>
-          <Trigger><div/></Trigger>
-          <Panel><div><Close><button data-testid='btn' onClick={cb}/></Close></div></Panel>
+          <Trigger>
+            <div />
+          </Trigger>
+          <Panel>
+            <div>
+              <Close>
+                <button data-testid="btn" onClick={cb} />
+              </Close>
+            </div>
+          </Panel>
         </Section>
       </Accordion>
     )
@@ -584,19 +785,13 @@ describe(`<Close>`, () => {
 })
 
 describe(`useControls()`, () => {
-  it('should have open, close, toggle keys', () => {
-
-  })
+  it('should have open, close, toggle keys', () => {})
 })
 
 describe(`useDisabled()`, () => {
-  it('should return true if disabled, false if not', () => {
-
-  })
+  it('should return true if disabled, false if not', () => {})
 })
 
 describe(`useIsOpen()`, () => {
-  it('should return true if open, false if not', () => {
-
-  })
+  it('should return true if open, false if not', () => {})
 })
