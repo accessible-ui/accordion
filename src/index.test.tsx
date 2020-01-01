@@ -1,17 +1,8 @@
 /* jest */
 import React from 'react'
-// import {renderHook} from '@testing-library/react-hooks'
+import {renderHook} from '@testing-library/react-hooks'
 import {render, fireEvent, act} from '@testing-library/react'
-import {
-  Accordion,
-  Section,
-  Trigger,
-  Panel,
-  Close,
-  useControls,
-  useDisabled,
-  useIsOpen,
-} from './index'
+import {Accordion, Section, Trigger, Panel, Close, useControls} from './index'
 
 const silenceErrors = (test: (...args: any[]) => void) => () => {
   const originalError = console.error
@@ -785,13 +776,18 @@ describe(`<Close>`, () => {
 })
 
 describe(`useControls()`, () => {
-  it('should have open, close, toggle keys', () => {})
-})
-
-describe(`useDisabled()`, () => {
-  it('should return true if disabled, false if not', () => {})
-})
-
-describe(`useIsOpen()`, () => {
-  it('should return true if open, false if not', () => {})
+  it('should have open, close, toggle keys', () => {
+    const {result} = renderHook(() => useControls(), {wrapper: ({children}) => (
+      <Accordion defaultOpen={0}>
+        <Section>
+          <div children={children}/>
+        </Section>
+      </Accordion>
+      )})
+    expect(Object.keys(result.current)).toStrictEqual([
+      'open',
+      'close',
+      'toggle',
+    ])
+  })
 })
