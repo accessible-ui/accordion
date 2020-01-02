@@ -78,6 +78,7 @@ export const Accordion: React.FC<AccordionProps> = ({
   if (__DEV__) {
     React.Children.forEach(children, child => {
       if (
+        /* istanbul ignore next */
         (typeof child !== 'object' && child !== null) ||
         (child as React.ReactElement).type !== Section
       ) {
