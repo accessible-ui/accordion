@@ -1,5 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<Accordion> should allow custom indexes and keys on sections: index=1 open, index=0 closed 1`] = `
+<DocumentFragment>
+  <div
+    aria-controls="🅰13"
+    aria-disabled="true"
+    aria-expanded="true"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-controls="🅰14"
+    aria-disabled="false"
+    aria-expanded="false"
+    role="button"
+    tabindex="0"
+  />
+</DocumentFragment>
+`;
+
 exports[`<Accordion> should not throw if it has no open sections and allowAllClosed is true 1`] = `
 <DocumentFragment>
   <div />
@@ -191,7 +210,7 @@ exports[`<Accordion> should throw on multiple open if allowMultipleOpen is false
 exports[`<Close> should close its parent section if allowAllClosed is true: hidden 1`] = `
 <DocumentFragment>
   <div
-    aria-controls="🅰34"
+    aria-controls="🅰44"
     aria-disabled="false"
     aria-expanded="false"
     role="button"
@@ -199,11 +218,11 @@ exports[`<Close> should close its parent section if allowAllClosed is true: hidd
   />
   <div
     aria-hidden="true"
-    id="🅰34"
+    id="🅰44"
     style="visibility: hidden;"
   >
     <button
-      aria-controls="🅰34"
+      aria-controls="🅰44"
       aria-disabled="false"
       aria-expanded="false"
       aria-label="Close section"
@@ -218,7 +237,7 @@ exports[`<Close> should close its parent section if allowAllClosed is true: hidd
 exports[`<Close> should close its parent section if allowAllClosed is true: visible 1`] = `
 <DocumentFragment>
   <div
-    aria-controls="🅰34"
+    aria-controls="🅰44"
     aria-disabled="false"
     aria-expanded="true"
     role="button"
@@ -226,11 +245,11 @@ exports[`<Close> should close its parent section if allowAllClosed is true: visi
   />
   <div
     aria-hidden="false"
-    id="🅰34"
+    id="🅰44"
     style="visibility: visible;"
   >
     <button
-      aria-controls="🅰34"
+      aria-controls="🅰44"
       aria-disabled="true"
       aria-expanded="true"
       aria-label="Close section"
@@ -245,7 +264,7 @@ exports[`<Close> should close its parent section if allowAllClosed is true: visi
 exports[`<Close> should fire child onClick: hidden 1`] = `
 <DocumentFragment>
   <div
-    aria-controls="🅰36"
+    aria-controls="🅰46"
     aria-disabled="false"
     aria-expanded="false"
     role="button"
@@ -253,11 +272,11 @@ exports[`<Close> should fire child onClick: hidden 1`] = `
   />
   <div
     aria-hidden="true"
-    id="🅰36"
+    id="🅰46"
     style="visibility: hidden;"
   >
     <button
-      aria-controls="🅰36"
+      aria-controls="🅰46"
       aria-disabled="false"
       aria-expanded="false"
       aria-label="Close section"
@@ -272,7 +291,7 @@ exports[`<Close> should fire child onClick: hidden 1`] = `
 exports[`<Close> should fire child onClick: visible 1`] = `
 <DocumentFragment>
   <div
-    aria-controls="🅰36"
+    aria-controls="🅰46"
     aria-disabled="false"
     aria-expanded="true"
     role="button"
@@ -280,11 +299,11 @@ exports[`<Close> should fire child onClick: visible 1`] = `
   />
   <div
     aria-hidden="false"
-    id="🅰36"
+    id="🅰46"
     style="visibility: visible;"
   >
     <button
-      aria-controls="🅰36"
+      aria-controls="🅰46"
       aria-disabled="true"
       aria-expanded="true"
       aria-label="Close section"
@@ -299,7 +318,7 @@ exports[`<Close> should fire child onClick: visible 1`] = `
 exports[`<Close> should not close its parent section if allowAllClosed is false: visible [despite click] 1`] = `
 <DocumentFragment>
   <div
-    aria-controls="🅰35"
+    aria-controls="🅰45"
     aria-disabled="true"
     aria-expanded="true"
     role="button"
@@ -307,11 +326,11 @@ exports[`<Close> should not close its parent section if allowAllClosed is false:
   />
   <div
     aria-hidden="false"
-    id="🅰35"
+    id="🅰45"
     style="visibility: visible;"
   >
     <button
-      aria-controls="🅰35"
+      aria-controls="🅰45"
       aria-disabled="true"
       aria-expanded="true"
       aria-label="Close section"
@@ -326,7 +345,7 @@ exports[`<Close> should not close its parent section if allowAllClosed is false:
 exports[`<Close> should not close its parent section if allowAllClosed is false: visible 1`] = `
 <DocumentFragment>
   <div
-    aria-controls="🅰35"
+    aria-controls="🅰45"
     aria-disabled="true"
     aria-expanded="true"
     role="button"
@@ -334,11 +353,11 @@ exports[`<Close> should not close its parent section if allowAllClosed is false:
   />
   <div
     aria-hidden="false"
-    id="🅰35"
+    id="🅰45"
     style="visibility: visible;"
   >
     <button
-      aria-controls="🅰35"
+      aria-controls="🅰45"
       aria-disabled="true"
       aria-expanded="true"
       aria-label="Close section"
@@ -353,7 +372,7 @@ exports[`<Close> should not close its parent section if allowAllClosed is false:
 exports[`<Panel> should apply custom class: closed + custom 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰31"
+    aria-controls="🅰40"
     aria-disabled="false"
     aria-expanded="false"
     data-testid="btn"
@@ -363,7 +382,7 @@ exports[`<Panel> should apply custom class: closed + custom 1`] = `
   <div
     aria-hidden="true"
     class="custom closed"
-    id="🅰31"
+    id="🅰40"
     style="visibility: hidden;"
   >
     open me
@@ -374,7 +393,7 @@ exports[`<Panel> should apply custom class: closed + custom 1`] = `
 exports[`<Panel> should apply custom class: open + custom 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰31"
+    aria-controls="🅰40"
     aria-disabled="false"
     aria-expanded="true"
     data-testid="btn"
@@ -384,7 +403,7 @@ exports[`<Panel> should apply custom class: open + custom 1`] = `
   <div
     aria-hidden="false"
     class="custom open"
-    id="🅰31"
+    id="🅰40"
     style="visibility: visible;"
   >
     open me
@@ -395,7 +414,7 @@ exports[`<Panel> should apply custom class: open + custom 1`] = `
 exports[`<Panel> should apply custom styles: display: block, height: 300 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰32"
+    aria-controls="🅰41"
     aria-disabled="false"
     aria-expanded="true"
     data-testid="btn"
@@ -404,7 +423,7 @@ exports[`<Panel> should apply custom styles: display: block, height: 300 1`] = `
   />
   <div
     aria-hidden="false"
-    id="🅰32"
+    id="🅰41"
     style="visibility: visible; height: 300px; display: block;"
   >
     open me
@@ -415,7 +434,7 @@ exports[`<Panel> should apply custom styles: display: block, height: 300 1`] = `
 exports[`<Panel> should apply custom styles: display: none, height: 300 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰32"
+    aria-controls="🅰41"
     aria-disabled="false"
     aria-expanded="false"
     data-testid="btn"
@@ -424,7 +443,7 @@ exports[`<Panel> should apply custom styles: display: none, height: 300 1`] = `
   />
   <div
     aria-hidden="true"
-    id="🅰32"
+    id="🅰41"
     style="visibility: hidden; height: 300px; display: none;"
   >
     open me
@@ -435,7 +454,7 @@ exports[`<Panel> should apply custom styles: display: none, height: 300 1`] = `
 exports[`<Panel> should apply open/closed classes: closed 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰29"
+    aria-controls="🅰38"
     aria-disabled="false"
     aria-expanded="false"
     data-testid="btn"
@@ -445,7 +464,7 @@ exports[`<Panel> should apply open/closed classes: closed 1`] = `
   <div
     aria-hidden="true"
     class="closed"
-    id="🅰29"
+    id="🅰38"
     style="visibility: hidden;"
   >
     open me
@@ -456,7 +475,7 @@ exports[`<Panel> should apply open/closed classes: closed 1`] = `
 exports[`<Panel> should apply open/closed classes: open 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰29"
+    aria-controls="🅰38"
     aria-disabled="false"
     aria-expanded="true"
     data-testid="btn"
@@ -466,7 +485,7 @@ exports[`<Panel> should apply open/closed classes: open 1`] = `
   <div
     aria-hidden="false"
     class="open"
-    id="🅰29"
+    id="🅰38"
     style="visibility: visible;"
   >
     open me
@@ -477,7 +496,7 @@ exports[`<Panel> should apply open/closed classes: open 1`] = `
 exports[`<Panel> should apply open/closed styles: display: block 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰30"
+    aria-controls="🅰39"
     aria-disabled="false"
     aria-expanded="true"
     data-testid="btn"
@@ -486,7 +505,7 @@ exports[`<Panel> should apply open/closed styles: display: block 1`] = `
   />
   <div
     aria-hidden="false"
-    id="🅰30"
+    id="🅰39"
     style="visibility: visible; display: block;"
   >
     open me
@@ -497,7 +516,7 @@ exports[`<Panel> should apply open/closed styles: display: block 1`] = `
 exports[`<Panel> should apply open/closed styles: display: none 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰30"
+    aria-controls="🅰39"
     aria-disabled="false"
     aria-expanded="false"
     data-testid="btn"
@@ -506,7 +525,7 @@ exports[`<Panel> should apply open/closed styles: display: none 1`] = `
   />
   <div
     aria-hidden="true"
-    id="🅰30"
+    id="🅰39"
     style="visibility: hidden; display: none;"
   >
     open me
@@ -514,10 +533,10 @@ exports[`<Panel> should apply open/closed styles: display: none 1`] = `
 </DocumentFragment>
 `;
 
-exports[`<Panel> should close on escape: closed 1`] = `
+exports[`<Panel> should close on escape if closeOnEscape is false: closed initially 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰33"
+    aria-controls="🅰43"
     aria-disabled="false"
     aria-expanded="false"
     data-testid="btn"
@@ -527,7 +546,70 @@ exports[`<Panel> should close on escape: closed 1`] = `
   <div
     aria-hidden="true"
     data-testid="panel"
-    id="🅰33"
+    id="🅰43"
+    style="visibility: hidden;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should close on escape if closeOnEscape is false: open [despite escape] 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰43"
+    aria-disabled="false"
+    aria-expanded="true"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    data-testid="panel"
+    id="🅰43"
+    style="visibility: visible;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should close on escape if closeOnEscape is false: open 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰43"
+    aria-disabled="false"
+    aria-expanded="true"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="false"
+    data-testid="panel"
+    id="🅰43"
+    style="visibility: visible;"
+  >
+    open me
+  </div>
+</DocumentFragment>
+`;
+
+exports[`<Panel> should close on escape: closed 1`] = `
+<DocumentFragment>
+  <button
+    aria-controls="🅰42"
+    aria-disabled="false"
+    aria-expanded="false"
+    data-testid="btn"
+    role="button"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    data-testid="panel"
+    id="🅰42"
     style="visibility: hidden; height: 300px; display: none;"
   >
     open me
@@ -538,7 +620,7 @@ exports[`<Panel> should close on escape: closed 1`] = `
 exports[`<Panel> should close on escape: closed initially 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰33"
+    aria-controls="🅰42"
     aria-disabled="false"
     aria-expanded="false"
     data-testid="btn"
@@ -548,7 +630,7 @@ exports[`<Panel> should close on escape: closed initially 1`] = `
   <div
     aria-hidden="true"
     data-testid="panel"
-    id="🅰33"
+    id="🅰42"
     style="visibility: hidden; height: 300px; display: none;"
   >
     open me
@@ -559,7 +641,7 @@ exports[`<Panel> should close on escape: closed initially 1`] = `
 exports[`<Panel> should close on escape: open 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰33"
+    aria-controls="🅰42"
     aria-disabled="false"
     aria-expanded="true"
     data-testid="btn"
@@ -569,7 +651,7 @@ exports[`<Panel> should close on escape: open 1`] = `
   <div
     aria-hidden="false"
     data-testid="panel"
-    id="🅰33"
+    id="🅰42"
     style="visibility: visible; height: 300px; display: block;"
   >
     open me
@@ -612,7 +694,7 @@ Object {
 exports[`<Trigger> should apply custom class: closed + custom 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰26"
+    aria-controls="🅰29"
     aria-disabled="false"
     aria-expanded="false"
     class="custom closed"
@@ -628,7 +710,7 @@ exports[`<Trigger> should apply custom class: closed + custom 1`] = `
 exports[`<Trigger> should apply custom class: open + custom 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰26"
+    aria-controls="🅰29"
     aria-disabled="false"
     aria-expanded="true"
     class="custom open"
@@ -644,7 +726,7 @@ exports[`<Trigger> should apply custom class: open + custom 1`] = `
 exports[`<Trigger> should apply custom styles: display: block, height: 300 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰27"
+    aria-controls="🅰30"
     aria-disabled="false"
     aria-expanded="true"
     data-testid="btn"
@@ -660,7 +742,7 @@ exports[`<Trigger> should apply custom styles: display: block, height: 300 1`] =
 exports[`<Trigger> should apply custom styles: display: none, height: 300 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰27"
+    aria-controls="🅰30"
     aria-disabled="false"
     aria-expanded="false"
     data-testid="btn"
@@ -676,7 +758,7 @@ exports[`<Trigger> should apply custom styles: display: none, height: 300 1`] = 
 exports[`<Trigger> should apply open/closed classes: closed 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰24"
+    aria-controls="🅰27"
     aria-disabled="false"
     aria-expanded="false"
     class="closed"
@@ -692,7 +774,7 @@ exports[`<Trigger> should apply open/closed classes: closed 1`] = `
 exports[`<Trigger> should apply open/closed classes: open 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰24"
+    aria-controls="🅰27"
     aria-disabled="false"
     aria-expanded="true"
     class="open"
@@ -708,7 +790,7 @@ exports[`<Trigger> should apply open/closed classes: open 1`] = `
 exports[`<Trigger> should apply open/closed styles: display: block 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰25"
+    aria-controls="🅰28"
     aria-disabled="false"
     aria-expanded="true"
     data-testid="btn"
@@ -724,7 +806,7 @@ exports[`<Trigger> should apply open/closed styles: display: block 1`] = `
 exports[`<Trigger> should apply open/closed styles: display: none 1`] = `
 <DocumentFragment>
   <button
-    aria-controls="🅰25"
+    aria-controls="🅰28"
     aria-disabled="false"
     aria-expanded="false"
     data-testid="btn"

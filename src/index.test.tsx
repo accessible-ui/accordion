@@ -265,6 +265,25 @@ describe('<Accordion>', () => {
     ).toMatchSnapshot('index=0 open, index=1 open')
   })
 
+  it('should allow custom indexes and keys on sections', () => {
+    expect(
+      render(
+        <Accordion defaultOpen={[1]}>
+          <Section index={1} key="1">
+            <Trigger>
+              <div />
+            </Trigger>
+          </Section>
+          <Section index={0} key="0">
+            <Trigger>
+              <div />
+            </Trigger>
+          </Section>
+        </Accordion>
+      ).asFragment()
+    ).toMatchSnapshot('index=1 open, index=0 closed')
+  })
+
   it('should call onChange handler when open sections change', () => {
     const cb = jest.fn()
     const result = render(
@@ -390,6 +409,7 @@ describe(`<Section>`, () => {
         <Section disabled>
           {context => {
             close = context.close
+
             return (
               <Trigger>
                 <div data-testid="btn" />
@@ -404,6 +424,33 @@ describe(`<Section>`, () => {
     expect(getByTestId('btn').getAttribute('aria-expanded')).toBe('true')
     act(close)
     expect(getByTestId('btn').getAttribute('aria-expanded')).toBe('true')
+  })
+
+  it('should not open if disabled', () => {
+    let open
+    const result = render(
+      <Accordion allowAllClosed>
+        <Section disabled>
+          {context => {
+            open = context.open
+
+            return (
+              <Trigger>
+                <div data-testid="btn" />
+              </Trigger>
+            )
+          }}
+        </Section>
+      </Accordion>
+    )
+
+    expect(result.getByTestId('btn').getAttribute('aria-expanded')).toBe(
+      'false'
+    )
+    act(open)
+    expect(result.getByTestId('btn').getAttribute('aria-expanded')).toBe(
+      'false'
+    )
   })
 
   it(`should not close if allowAllClosed is false`, () => {
@@ -591,6 +638,81 @@ describe(`<Trigger>`, () => {
     fireEvent.click(getByTestId('btn'))
     expect(cb).toBeCalledTimes(1)
   })
+
+  it(`should focus next trigger on down arrow`, () => {
+    const focus1 = jest.fn()
+    const focus2 = jest.fn()
+
+    const {getByTestId} = render(
+      <Accordion allowAllClosed>
+        <Section>
+          <Trigger>
+            <button data-testid="btn-1" onFocus={focus1} />
+          </Trigger>
+        </Section>
+        <Section>
+          <Trigger>
+            <button data-testid="btn-2" onFocus={focus2} />
+          </Trigger>
+        </Section>
+      </Accordion>
+    )
+
+    fireEvent.keyDown(getByTestId('btn-1'), {which: 40})
+    expect(focus2).toBeCalledTimes(1)
+    fireEvent.keyDown(getByTestId('btn-2'), {which: 40})
+    expect(focus1).toBeCalledTimes(1)
+  })
+
+  it(`should focus prev trigger on up arrow`, () => {
+    const focus1 = jest.fn()
+    const focus2 = jest.fn()
+
+    const {getByTestId} = render(
+      <Accordion allowAllClosed>
+        <Section>
+          <Trigger>
+            <button data-testid="btn-1" onFocus={focus1} />
+          </Trigger>
+        </Section>
+        <Section>
+          <Trigger>
+            <button data-testid="btn-2" onFocus={focus2} />
+          </Trigger>
+        </Section>
+      </Accordion>
+    )
+
+    fireEvent.keyDown(getByTestId('btn-1'), {which: 38})
+    expect(focus2).toBeCalledTimes(1)
+    fireEvent.keyDown(getByTestId('btn-2'), {which: 38})
+    expect(focus1).toBeCalledTimes(1)
+  })
+
+  it(`should focus first trigger on home key, last on end key`, () => {
+    const focus1 = jest.fn()
+    const focus2 = jest.fn()
+
+    const {getByTestId} = render(
+      <Accordion allowAllClosed>
+        <Section>
+          <Trigger>
+            <button data-testid="btn-1" onFocus={focus1} />
+          </Trigger>
+        </Section>
+        <Section>
+          <Trigger>
+            <button data-testid="btn-2" onFocus={focus2} />
+          </Trigger>
+        </Section>
+      </Accordion>
+    )
+
+    fireEvent.keyDown(getByTestId('btn-1'), {which: 36})
+    expect(focus1).toBeCalledTimes(1)
+    fireEvent.keyDown(getByTestId('btn-2'), {which: 35})
+    expect(focus2).toBeCalledTimes(1)
+  })
 })
 
 describe(`<Panel>`, () => {
@@ -699,6 +821,30 @@ describe(`<Panel>`, () => {
     })
     expect(asFragment()).toMatchSnapshot('closed')
   })
+
+  it(`should close on escape if closeOnEscape is false`, () => {
+    const {getByTestId, asFragment} = render(
+      <Accordion allowAllClosed>
+        <Section>
+          <Trigger>
+            <button data-testid="btn" />
+          </Trigger>
+          <Panel closeOnEscape={false}>
+            <div data-testid="panel">open me</div>
+          </Panel>
+        </Section>
+      </Accordion>
+    )
+
+    expect(asFragment()).toMatchSnapshot('closed initially')
+    fireEvent.click(getByTestId('btn'))
+    expect(asFragment()).toMatchSnapshot('open')
+    fireEvent.keyDown(getByTestId('panel'), {
+      key: 'Escape',
+      which: 27,
+    })
+    expect(asFragment()).toMatchSnapshot('open [despite escape]')
+  })
 })
 
 describe(`<Close>`, () => {
@@ -777,13 +923,16 @@ describe(`<Close>`, () => {
 
 describe(`useControls()`, () => {
   it('should have open, close, toggle keys', () => {
-    const {result} = renderHook(() => useControls(), {wrapper: ({children}) => (
-      <Accordion defaultOpen={0}>
-        <Section>
-          <div children={children}/>
-        </Section>
-      </Accordion>
-      )})
+    const {result} = renderHook(() => useControls(), {
+      wrapper: ({children}) => (
+        <Accordion defaultOpen={0}>
+          <Section>
+            <div children={children} />
+          </Section>
+        </Accordion>
+      ),
+    })
+
     expect(Object.keys(result.current)).toStrictEqual([
       'open',
       'close',
