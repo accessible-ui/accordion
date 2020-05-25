@@ -90,7 +90,7 @@ const Component = () => (
 | Hook                              | Description                                                                                                           |
 | --------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | [`useAccordion()`](#useaccordion) | This hook returns the value of the accordion's [AccordionContext object](#accordioncontextvalue).                     |
-| [`useSection()`](#usesection)   | This hook returns the value of the accordion [`<Section>`'s](#section) [SectionContext object](#sectioncontextvalue). |
+| [`useSection()`](#usesection)     | This hook returns the value of the accordion [`<Section>`'s](#section) [SectionContext object](#sectioncontextvalue). |
 | [`useControls()`](#usecontrols)   | This hook returns the accordion [`<Section>`'s](#section) `open`, `close`, and `toggle` functions.                    |
 | [`useDisabled()`](#usedisabled)   | This hook returns the accordion [`<Section>`'s](#section) `disabled` value.                                           |
 | [`useIsOpen()`](#useisopen)       | This hook returns the accordion [`<Section>`'s](#section) `isOpen` value.                                             |
