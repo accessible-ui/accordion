@@ -1,12 +1,4 @@
-import React, {
-  cloneElement,
-  useState,
-  useRef,
-  useMemo,
-  useCallback,
-  useEffect,
-  useContext,
-} from 'react'
+import * as React from 'react'
 import {useKeycodes} from '@accessible/use-keycode'
 import useConditionalFocus from '@accessible/use-conditional-focus'
 import useId from '@accessible/use-id'
@@ -14,9 +6,6 @@ import Button from '@accessible/button'
 import useMergedRef from '@react-hook/merged-ref'
 import useLayoutEffect from '@react-hook/passive-layout-effect'
 import clsx from 'clsx'
-
-const __DEV__ =
-  typeof process !== 'undefined' && process.env.NODE_ENV !== 'production'
 
 export interface AccordionContextValue {
   sections: (HTMLElement | undefined)[]
@@ -28,12 +17,18 @@ export interface AccordionContextValue {
   allowAllClosed: boolean
 }
 
-// @ts-ignore
-export const AccordionContext: React.Context<AccordionContextValue> = React.createContext(
-    {}
-  ),
+const noop = () => {}
+export const AccordionContext = React.createContext<AccordionContextValue>({
+    sections: [],
+    registerSection: () => noop,
+    opened: [],
+    open: noop,
+    close: noop,
+    isOpen: () => false,
+    allowAllClosed: false,
+  }),
   {Consumer: AccordionConsumer} = AccordionContext,
-  useAccordion = () => useContext<AccordionContextValue>(AccordionContext)
+  useAccordion = () => React.useContext<AccordionContextValue>(AccordionContext)
 
 export interface AccordionProps {
   open?: number | number[]
@@ -56,15 +51,18 @@ export const Accordion: React.FC<AccordionProps> = ({
   onChange,
   children,
 }) => {
-  const [sections, setSections] = useState<(HTMLElement | undefined)[]>([])
-  const [openState, setOpen] = useState<number[]>(
+  const [sections, setSections] = React.useState<(HTMLElement | undefined)[]>(
+    []
+  )
+  defaultOpen = open ? open : defaultOpen
+  const [openState, setOpen] = React.useState<number[]>(
     Array.isArray(defaultOpen)
       ? defaultOpen
       : typeof defaultOpen === 'number'
       ? [defaultOpen]
       : []
   )
-  const nextOpen = useMemo(
+  const nextOpen = React.useMemo(
     () =>
       typeof open === 'undefined'
         ? openState
@@ -73,10 +71,12 @@ export const Accordion: React.FC<AccordionProps> = ({
         : [open],
     [open, openState]
   )
-  const prevOpen = useRef<number[]>(nextOpen)
+  const storedOnChange = React.useRef(onChange)
+  storedOnChange.current = onChange
+  const didMount = React.useRef(false)
 
-  if (__DEV__) {
-    React.Children.forEach(children, child => {
+  if (typeof process !== 'undefined' && process.env.NODE_ENV !== 'production') {
+    React.Children.forEach(children, (child) => {
       if (
         /* istanbul ignore next */
         (typeof child !== 'object' && child !== null) ||
@@ -101,18 +101,18 @@ export const Accordion: React.FC<AccordionProps> = ({
     }
   }
 
-  const context = useMemo(
+  const context = React.useMemo(
     () => ({
       sections,
       registerSection: (index: number, trigger: HTMLElement) => {
-        setSections(current => {
+        setSections((current) => {
           const next = current.slice(0)
           next[index] = trigger
           return next
         })
 
         return () =>
-          setSections(current => {
+          setSections((current) => {
             if (current[index] === void 0) return current
             const next = current.slice(0)
             next[index] = void 0
@@ -121,13 +121,13 @@ export const Accordion: React.FC<AccordionProps> = ({
       },
       opened: nextOpen,
       open: (index: number | undefined) =>
-        setOpen(current => {
+        setOpen((current) => {
           if (index === void 0 || current.indexOf(index) > -1) return current
           if (allowMultipleOpen) return current.concat(index)
           return [index]
         }),
       close: (index: number | undefined) =>
-        setOpen(current => {
+        setOpen((current) => {
           if (index === void 0 || current.indexOf(index) === -1) return current
           if (current.length === 1 && !allowAllClosed) return current
           return current
@@ -141,11 +141,11 @@ export const Accordion: React.FC<AccordionProps> = ({
     [sections, nextOpen, allowMultipleOpen, allowAllClosed]
   )
 
-  useEffect(() => {
-    prevOpen.current !== nextOpen &&
-      onChange?.(allowMultipleOpen ? nextOpen : nextOpen[0])
-    prevOpen.current = nextOpen
-  }, [nextOpen])
+  React.useEffect(() => {
+    didMount.current &&
+      storedOnChange.current?.(allowMultipleOpen ? openState : openState[0])
+    didMount.current = true
+  }, [openState, allowMultipleOpen])
 
   return (
     <AccordionContext.Provider value={context}>
@@ -153,7 +153,7 @@ export const Accordion: React.FC<AccordionProps> = ({
         const child = child_ as React.ReactElement
         const {index: childIndex} = child.props
 
-        return cloneElement(child, {
+        return React.cloneElement(child, {
           key: child.key === null ? index : child.key,
           index: childIndex !== void 0 ? childIndex : index,
         })
@@ -179,12 +179,18 @@ export interface SectionControls {
   toggle: () => void
 }
 
-// @ts-ignore
-export const SectionContext: React.Context<SectionContextValue> = React.createContext(
-    {}
-  ),
+export const SectionContext = React.createContext<SectionContextValue>({
+    isOpen: false,
+    open: noop,
+    close: noop,
+    toggle: noop,
+    id: void 0,
+    index: 0,
+    disabled: false,
+    triggerRef: {current: null},
+  }),
   {Consumer: SectionConsumer} = SectionContext,
-  useSection = () => useContext<SectionContextValue>(SectionContext),
+  useSection = () => React.useContext<SectionContextValue>(SectionContext),
   useIsOpen = () => useSection().isOpen,
   useDisabled = () => useSection().disabled,
   useControls = (): SectionControls => {
@@ -211,15 +217,16 @@ export const Section: React.FC<SectionProps> = ({
   children,
 }) => {
   const {isOpen, open, close, registerSection} = useAccordion()
-  const triggerRef = useRef<HTMLElement>(null)
+  const triggerRef = React.useRef<HTMLElement>(null)
   id = useId(id)
 
-  useEffect(
+  React.useEffect(
     () => registerSection(index as number, triggerRef.current as HTMLElement),
-    []
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [index]
   )
 
-  const context = useMemo(
+  const context = React.useMemo(
     () => ({
       id,
       index: index as number,
@@ -283,7 +290,7 @@ export const Trigger: React.FC<TriggerProps> = ({
 
   return (
     <Button>
-      {cloneElement(children, {
+      {React.cloneElement(children, {
         'aria-controls': id,
         'aria-expanded': '' + isOpen,
         'aria-disabled':
@@ -297,15 +304,10 @@ export const Trigger: React.FC<TriggerProps> = ({
           children.props.style,
           isOpen ? openStyle : closedStyle
         ),
-        onClick: children.props.onClick
-          ? useCallback(
-              e => {
-                toggle()
-                children.props.onClick(e)
-              },
-              [toggle, children.props.onClick]
-            )
-          : toggle,
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          toggle()
+          children.props.onClick?.(e)
+        },
         ref,
       })}
     </Button>
@@ -347,8 +349,10 @@ export const Panel: React.FC<PanelProps> = ({
 }) => {
   const {id, isOpen, close, triggerRef} = useSection()
   // handles closing the modal when the ESC key is pressed
-  const prevOpen = useRef<boolean>(isOpen)
-  const focusRef = useConditionalFocus(!prevOpen.current && isOpen, true)
+  const prevOpen = React.useRef<boolean>(isOpen)
+  const focusRef = useConditionalFocus(!prevOpen.current && isOpen, {
+    includeRoot: true,
+  })
   const ref = useMergedRef(
     // @ts-ignore
     children.ref,
@@ -368,7 +372,7 @@ export const Panel: React.FC<PanelProps> = ({
     prevOpen.current = isOpen
   }, [isOpen])
 
-  return cloneElement(children, {
+  return React.cloneElement(children, {
     'aria-hidden': `${!isOpen}`,
     id,
     className:
@@ -392,28 +396,22 @@ export const Close: React.FC<CloseProps> = ({children}) => {
   const {close, isOpen, id} = useSection()
   return (
     <Button>
-      {cloneElement(children, {
+      {React.cloneElement(children, {
         'aria-controls': id,
         'aria-expanded': '' + isOpen,
         'aria-label': children.props['aria-label'] || 'Close section',
         'aria-disabled': '' + !allowAllClosed && isOpen && opened.length === 1,
-        onClick:
-          typeof children.props.onClick === 'function'
-            ? useCallback(
-                e => {
-                  close()
-                  children.props.onClick(e)
-                },
-                [close, children.props.onClick]
-              )
-            : close,
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          close()
+          children.props.onClick?.(e)
+        },
       })}
     </Button>
   )
 }
 
 /* istanbul ignore next */
-if (__DEV__) {
+if (typeof process !== 'undefined' && process.env.NODE_ENV !== 'production') {
   Accordion.displayName = 'Accordion'
   Section.displayName = 'Section'
   Panel.displayName = 'Panel'
